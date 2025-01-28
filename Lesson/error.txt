@@ -1,0 +1,28 @@
+ERROR 1 : package "namepackage.blabla" does not exist
+
+    - il faut toujours assurer que les packages soient compiler en bytecode (.class)
+        ex : javac namepackage/*.java
+
+    - si dans le .vscode/setting.json, il n'y a pas de "java.project.outputPath": "bin"
+        ** ex : 
+            {
+                "java.dependency.packagePresentation": "hierarchical"       // "hierarchical" spécifié que fe.namepackage.Person = fe/namepackage/Person.java
+            }                                                                  sinon "flat" spécifié que fe.namepackage.Person = fe.namepackage/Person.java
+
+        ** donc le compilateur cherchera les bytecodes dans le même dossier que leur fichier sources (.java)
+        ** compilation : javac namepackage/*.java
+        ** lancement : java namepackage/Main
+
+
+    - s'il y a "java.project.outputPath": "bin" dans le .vscode/setting.json
+        ** ex : 
+            {
+                "java.project.sourcePaths": ["src"],            // le compilateur cherchera les fichiers source dans nomProjet/src
+                "java.project.outputPath": "bin",               // le compilateur cherchera les bytecodes dans nomProjet/bin
+                "java.project.referencedLibraries": [
+                    "lib/**/*.jar"                              // spécifie les bibliothèques externes utilisées par le projet (généralement des fichiers JAR)
+                ]
+            }
+
+        ** compilation : javac -d bin src/fe/entities/Person.java
+        ** lancement : java -cp bin fe.entities.Main

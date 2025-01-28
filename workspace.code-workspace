@@ -1,0 +1,44 @@
+{
+	"folders": [
+	  {
+		"path": "practice"
+	  },
+	  {
+		"path": "exercise"
+	  }
+	],
+	"settings": {
+	  // Paramètres spécifiques à ce workspace
+	  "java.jdt.ls.java.home": "C:/Program Files/Java/jdk-21",
+	  "java.project.sourcePaths": ["practice/src", "exercise/src"],
+	  "editor.tabSize": 4,
+	  "files.exclude": {
+		"**/node_modules": true,
+		"**/*.class": true,
+		"**/target": true
+	  }
+	},
+	"launch": {
+	  "configurations": [
+		{
+		  "type": "jdk",
+		  "request": "launch",
+		  "name": "Lancer App",
+		  "mainClass": "com.mypackages.services.Main"
+		},
+		{
+		  "type": "jdk",
+		  "request": "launch",
+		  "name": "Lancer Exercices",
+		  "mainClass": "com.example.Main"
+		}
+	  ]
+	},
+	"extensions": {
+	  "recommendations": [
+		"redhat.java",
+		"vscjava.vscode-java-pack"
+	  ]
+	}
+  }
+  

@@ -1,0 +1,654 @@
+INTRODUCTION ------------------------------------------------------------------------------------------------------
+
+class MainApp {
+    public static void main(String[] args) {
+        System.out.println("Bonjour tout le monde ! :)");
+    }
+}
+
+
+---------------------------------------------------------------------------------------
+Type        Type "Objet"    Place en        Fourchette de 
+Primitif	Associé	        Mémoire	        Valeurs (Min & Max)
+---------------------------------------------------------------------------------------
+boolean	    Boolean	        1 octet	        true (1), false (0)
+byte	    Byte	        1 octet	        -128 à 127
+char	    Character	    2 octets	    Unicode (65536 caractères disponibles)
+short	    Short	        2 octets	    -32768 à 32767
+int	        Integer	        4 octets	    -2 147 483 648 à 2 147 483 647
+long	    Long	        8 octets	    -2<sup>63</sup> à +2<sup>63</sup>-1
+float	    Float	        4 octets	    1.4x10<sup>-45</sup> à 3.4x10<sup>38</sup>
+double	    Double	        8 octets	    4.9x10<sup>-324</sup> à 1.7x10<sup>308</sup>
+---------------------------------------------------------------------------------------
+
+Notation d'un nombre :
+    * 14 
+    * 18056
+    * 1_128_8531_876 (avec un séparateur de millier pour la lisibilité)
+
+
+Base numérique : (on peut le fais dans n'importe quel type même String)
+    * décimale (10 => 0 à 9) : 0b110101110  (préfixé par 0b____ ou \b) 
+    * binaire (2 => 0 et 1) : 110_101_110
+    * octale (8 => 0 à 7) : 0755            (préfixé par 0____ ou \)
+    * hexadécimale (16 => 0 à F) :0xAF45    (préfixé par 0x____ ou \x)
+
+
+caractères spéciaux : 
+    \n : nouvelle ligne
+    \t : tabulation
+    \r : retour chariot
+    \b : retour arrière
+    \f : nouvelle page
+
+
+FLUX DE CONTROLE ------------------------------------------------------------------------------------------------------
+
+Les conditions on peut l'écrire sans les accolades sur une seule ligne
+    if (value == 24 || value == 16) 
+        System.out.println("Oui !"); 
+    else if(value == 14)
+        System.out.println("value ne vaut 14");
+    else
+        System.out.println("value ne vaut ni 24 ni 16 ni 14");
+        
+
+CLASSE ------------------------------------------------------------------------------------------------------
+
+NB : 
+    * On ne peut pas créer un projet java sans une Classe
+    * 1 classe = 1 fichier
+    * Les propriétés d'une classe est "public" par défaut si 
+        on ne me pas de porté
+    * On peut déclarer des méthodes de même nom si ils n'on pas les 
+        même signatures (arguments, type d'arguments, type de retour)
+        Ça s'appelle le "Surcharge de méthode"
+
+    * le "constructor" porte le nom du classe   
+        public class Person {
+            public Person() {                           // Constructor
+                System.out.println("Person created");
+            }
+        }
+
+    * on met la methode "static" pour les classes qu'on ne veut pas instancier
+        par exemple dans la méthode "main"
+
+    * Les valeur par défauts des arguments ne fonctionne pas en java
+        public static String sayHello(String name, int NbSister = 1) {          // NO
+            return "Hello " + name + " ! You have " + NbSister +" sisters";
+        }
+        (Sinon on peut simuler avec le surcharge de methodes en créant plusieurs 
+        methode de même nom)
+
+
+Accesseurs : (encapsulation de données)
+    # getters : récupération d'un propriété "private" d'une classe (lecture) et d'y ajouter une logique.
+        public String getName() {
+            return name != null ? name.toUpperCase() : "Nom non défini";
+        }
+
+    # setters : modification d'un propriété "private" d'une classe (écriture) et d'y ajouter une logique.
+        public void setName(String name) {
+            if (name != null && !name.isEmpty()) {
+                this.name = name;
+            } else {
+                throw new IllegalArgumentException("Nom invalide");
+            }
+        }
+
+
+
+Variable de Classe :
+    private static int maxSoftware = 2;
+    public Software(String licence) {
+        if (maxSoftware > 0) {
+            this.licence = licence;
+            maxSoftware--;
+        } else {
+            System.out.println("Limite atteinte pour creer des logiciels");               
+        }
+    }
+
+
+VARIABLE ------------------------------------------------------------------------------------------------------
+
+Déclaration de variable : 
+    int tab[] = new int[3];     // reserver en mémoire 3 adresse de suite (length = 3)
+    int[] tab1, tab2            // tous les variables sont des tableaux
+    int tab1[], tab2            // seul tab1 est un tableau
+
+    int[] tab = { 81, 25, 37 };             // OK
+    int[] tab = new int[3]{81,25,37};       // OK
+
+    System.out.println(tab);                // affiche l'adresse mémoire du tab               
+    System.out.println(tab[0]);             // affiche le valeur du 1er element du tab      
+
+    * le Foreach ou le parcours d'un tableau 
+        for (int element : tabX) {             
+            System.out.println(element);
+        }       
+
+    * Le tableau à deux dimensions
+        int[][] tab = new int[2][3];        => tableau à 2 lignes et 3 colonnes
+        int[][] tab = {{ 81, 25, 37 }, { 81, 25, 37 }};  
+
+    parcours tableau à deux dimensions:
+        for(int i = 0; i < tab.length; i++) {
+            for(int j = 0; j < tab[i].length; j++) {
+                System.out.println(tab[i][j]);
+            }
+        }
+
+STRING ------------------------------------------------------------------------------------------------------
+
+STRING : immuable (Contenue non-modifiable) => le système détruit l'ancien adresse et
+            crée un nouveau String sur un nouveau adresse (même les methodes toUpperCase(), trim(),...)
+    * instanciation de type de l'objet String
+        String chaine1= "Hello"
+        String chaine2= new String("world")
+
+    * methode utiles : 
+        - concat()
+        - length() => la longueur du String
+        - toUpperCase(), toLowerCase()            
+        - trim() => enlève les espaces au début et à la fin
+        - replace("a","o")  => remplace les "a" en "o"
+        - charAt(0) => récupère le caractère au 1er position
+        - substring(1, 3) => récupérer 3 caractère à partir du l'indice 1 (2è caractère)
+        - equals(chaine) => on ne peu pas comparer comme ceci (chaine1 == chaiine2) deux chaines 
+        - replaceAll("/", " ") => remplacer tous les "/" en espace " "
+        - maString.split ("-") => construire un tableau de String en le séparant la chaine "maString" quand il voit "-" 
+        
+        Exemples :
+            String str3 = "See/you/soon";
+            System.out.println(str3.replaceAll("/", " "));
+            String[] tokens = str3.split("/");
+            for (String token : tokens) {
+                System.out.println(token);
+            }
+
+    * concatenation
+        String ch = chaine1 + " " + chaine2                 // plus lourd en mémoire
+        String ch = chaine1.concat(" ").concat(chaine2)     // plus léger, plus rapide
+
+    * le StringBuilder / StringBuffer => immuable (Contenue modifiable) pas comme l'Objet string
+        et ils ont le même fonctionnement et meme utilisation
+        StringBuilder maString = new StringBuilder();
+
+        - length(), capacity()
+        - append(<str>) => c'est comme la méthode "push" avec les array
+        - insert(<index>, <string>) => insérer une chaîne dans un position spécifique
+
+
+PACKAGE ------------------------------------------------------------------------------------------------------
+        
+Création d'un package:
+    - Créer un fichier nompackage/NomFichier.java (nom de package : miniscule, nom de fichier : pascal case)
+    - insérer au debut de ligne le nom de package (comme le namespace) et on crée un classe classique
+    - s'il y a plusieurs dossier imbriquer, on le sépare par un point
+        ex : com/weapons/Knife.java
+            package com.weapons;
+            public class Knife {
+                public Knife() {
+                    System.out.println("Knife instancié !");
+                }
+            }
+    - Remarque : souvient toujours de mettre bien la portée de classe, des methodes et des propriétés (public,...)
+
+Import du package :
+    - Dans un autre Classe qui l'utilise, on l'import depuis son nom de package (nompackage.NomClass)
+        Remarque : ici on import bien avec son nom de classe mais pas son nom de fichier.
+    - si le package est dans le même dossier (parfois), on n'a pas besoin de l'importer  
+    - si on veut inclure tous les classes d'une package, on utilise le symbole étoile "*" (import nompackage.*;)
+        ex : src/main.java
+            import com.weapons.Knife;          // import la classe
+            public class Main {
+                public static void main(String[] args) {
+                    Knife weapon1 = new Knife();
+                }
+            }
+
+    
+LECTURE AU CLAVIER ------------------------------------------------------------------------------------------------------
+
+    - BufferedReader : lecture de données en string (multithread)       // plus rapide
+    - Scanner : lecture + parsing (int,float,...) (monothread)          // plus lent même si monothread    
+
+    * BufferedReader(<classReader>) : il a besoin de classe de lecture parc'il ne sait pas par défaut où est
+            ce qu'il va lire (les périphérique d'entrée, un flux, un filchier,...) 
+        import java.io.BufferedReader;
+        import java.io.InputStreamReader;                               // un flux d'entrée
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));    
+        System.out.print("Quel est votre nom ? ");
+        String name = br.readLine();
+    
+        - readLine() => lire tous les chaines de caractère (sans à la ligne "\n")  
+
+        NB : il faut rendre la classe en "throws Exception" pour gérer les erreur en cas où 
+            il ne peut pas lire les entrées SINON la classe ne se compile pas
+            ex : public static void main(String[] args) throws Exception 
+
+    * Scanner(<FluxLecture>) : il n'a besoin de classe de lecture mais juste un flux de lecture (System.in, System.out)
+        import java.util.Scanner;
+
+        Scanner sc = new Scanner(System.in);
+        
+        System.out.print("Quel est votre age ? ");
+        int age = sc.nextInt();
+        System.out.println("Vous avez " + age + " ans ");
+        sc.close();
+    
+        - nextLine() => lire tous les chaines entrée (sans à la ligne "\n")  
+        - nextInt() => lire tous les chaines entrée + parseInt
+        - nextChar() => lire tous les chaines entrée + parseChar
+        - nextByte() => lire tous les chaines entrée + parseByte
+        - nextInFloat() => lire tous les chaines entrée + parseFloat
+        - nextBoolean() => lire tous les chaines entrée + parseBoolean
+
+        NB : 
+            * pas besoin "throws Exception"  
+
+
+EXCEPTION ------------------------------------------------------------------------------------------------------
+
+    Try {
+        System.out.print("Quel est votre age ? ");                      // 1 seul block "try"
+        int age = sc.nextInt();
+        System.out.println("Vous avez " + age + " ans ");
+    }
+    catch (NomException1 e) {                                           // s'execute si NomException1 se produit
+        System.out.println("age n'est pas un nombre");
+    }
+    catch (NomException2 e) {                                           // s'execute si NomException2 se produit
+        System.out.println("age trop grand");
+    }
+    catch (Exception e) {                                               // s'execute si un exception en général se produit
+        System.out.println("il y a une exception!");
+    }
+    finaly {
+        System.out.println("cet text s'affiche s'il y a une exception ou pas");
+    }
+
+
+
+HERITAGE ------------------------------------------------------------------------------------------------------
+
+NB : 
+    - toute les classes hérite de la classe "Object"
+    - la porté "protected" rend une propriété parent accessible uniquement par ces enfants et petit-enfants
+    - "extends" rend une classe enfant d'une autre classe 
+    - la methode super() veut dire utiliser le constructor de la classe parent
+    - la super.move() veut dire utiliser le methode "move()" de la classe parent
+    - les enfants peut utiliser les methodes de la classe supérieur
+    - en java, une classe ne peut pas hérité de plusieurs parents (héritage multiple )
+    - mot clé "final" :
+        * final nomClass = ce classe n'est pas extendable 
+        * final nomMethode = ce methode n'est pas redefiniss able dans les classe enfants  
+        * final nomVariable = ce classe n'est pas modifiable (constant)
+
+    ex : Horse.java
+        package jc.entities;
+        public class Horse {
+            protected String name;
+            protected int posX;
+            protected int posY;
+            public Horse(String name) {
+                this.name = name;
+                this.posX = 50;
+                this.posY = 50;
+            }
+            public void move(int x, int y) {
+                this.posX = x;
+                this.posY = y;
+                System.out.println("Le Cheval se déplace (X = " + this.posX + ", Y = " + this.posY + ")");
+            }
+        }
+
+    ex : Pegasus.java        
+        package jc.entities;
+        public class Pegasus extends Horse {
+            protected int posZ;
+            public Horse(String name) {
+                super();
+                this.posY = 50;
+            }
+            public void move(int x, int y) {
+                this.posX = x;
+                this.posY = y;
+                System.out.println("La Pégase s'envole dans les airs (X = " + this.posX + ", Y = " + this.posY + ", Z = " + this.posZ +")");
+            }
+        }
+
+
+CLASSE ABSTRAITE -------------------------------------------------------------------------------------------
+
+    -  Une classe abstraite est une classe qui ne peut pas être instanciée directement. 
+    -  Elle sert de modèle pour d'autres classes.
+    
+    Caractéristiques principales :
+        * Peut contenir des méthodes abstraites (sans implémentation => qu'on ne définit pas dans la classe)        => au moins une
+            et des méthodes concrètes (avec implémentation => qu'on définie dans la classe).
+        * Peut avoir des variables d'instance (propriété), des constructeurs, et des méthodes avec un corps.
+        * Une sous-classe doit hériter de la classe abstraite et implémenter toutes ses méthodes abstraites, 
+            sauf si la sous-classe elle-même est déclarée abstraite.
+        * peut étendre d'une autre classe abstraite
+
+CLASSE ABSTRAITE -------------------------------------------------------------------------------------------
+
+    - Une méthode abstraite est une méthode qui n’a pas de corps (pas de code dans les accolades). 
+    - Elle est uniquement définie pour être implémentée par des sous-classes.
+
+Caractéristiques principales :
+        * Elle est déclarée avec le mot-clé abstract.
+        * Elle ne peut exister que dans une classe abstraite.
+        * Elle force les classes dérivées à fournir une implémentation.
+
+
+INTERFACE ---------------------------------------------------------------------------------------------------
+
+    - Une interface en Java est un "contrat". Ce "contrat" stipule que toute classe qui implémente une 
+        interface doit fournir des implémentations pour toutes les méthodes déclarées dans cette interface.
+    - en terme d'explication, c'est comme si une interface c'est une classe abstraite dont toute les methodes
+        sont toutes abstraites.
+
+    - NB :
+        * on n'a pas besoin de spécifié "public" et "abstract" car toutes est publique et abstrait par défaut,
+            mais on peut aussi le faire.
+        * on fait "interface" au lieu de "class"
+        * peut étendre d'une autre interface (extends)
+        * on emploie le mot clé "implements" si une classe veut implémenter une interface (Rq : les extends d'abord)
+        * une classe peut implémenter plusieurs interface (implémentation multiple)
+    
+    ex : Volant.java
+    interface Volant {
+        void voler();
+    }
+
+    ex : Oiseau.java
+    public class Oiseau implements Volant {
+        @Override
+        public void voler() {
+            System.out.println("L'oiseau vole.");
+        }
+    }
+
+    ex : Avion.java
+    public class Avion implements Volant {
+        @Override
+        public void voler() {
+            System.out.println("L'avion vole.");
+        }
+    }
+
+
+POLYMORPHISME ---------------------------------------------------------------------------------------------
+
+
+COLLECTION ---------------------------------------------------------------------------------------------
+
+La collection est une interface qui est l'ensemble de tous ce qui est structure de données (pile, liste, file,...). 
+Elles peut stocker une quantité variable des ELEMENTS (données) qui est gérer de façon dynamique au niveau de la mémoire.
+
+Les classes qui implements l'interface collection auront ces methodes :
+    * add(ELEMENT) : ajouter un élément
+    * addAll(COLLECTION) : ajouter tous les elements d'une autre collection
+    * clear() : supprimer tous les elements d'une collection 
+    * remove(INDEX) : supprimer un element
+    * contains(ELEMENT) : vérifier si elle contient un element
+    * isEmpty() : vérifier si elle est vide
+    * size() : vérifier le nombre d'element (length)
+    * ... (voir la documentation)
+    - Collections.sort(collections) => trie les elements de la collection (import java.util.Collections)
+
+Les classes qui implements l'interface collection :
+    * ArrayList, LinkedList, Vector, HashSet, TreeSet, Stack, HashMap, TreeMap
+
+
+ 
+LISTE ---------------------------------------------------------------------------------------------
+
+    Définition du fichier "ressources/tableau-specificite-des-classes-de-collections.png":
+        ~ ordonnées : indique si les éléments de la collection conservent l'ordre dans lequel ils ont été ajoutés
+        ~ doublons : précise si la collection autorise plusieurs occurrences du même élément (doublons)
+        ~ accès direct : indique si les éléments de la collection peuvent être accédés rapidement par un index ou une clé. 
+                        Si Non, nécessite une itération pour trouver un élément.
+        ~ valeurs nulles : indique si la collection peut contenir des valeurs nulles (éléments ou clés nulles)
+        ~ thread safe : Précise si la collection est sûre pour une utilisation concurrente (accès simultané par plusieurs 
+                        threads sans provoquer d'erreurs ou de comportements inattendus).
+                        ✅ : La collection est conçue pour être utilisée dans des environnements multithreads.
+                        ❌ : La collection n'est pas thread-safe et nécessite une synchronisation explicite si 
+                                utilisée avec plusieurs threads.
+
+    Les classes qui implements l'interface LIST (LIST étend COLLECTION)
+
+        * ArrayList : (MonoT, accès direct, optimisé pour la lecture)               // Tableau dynamique
+        * LinkedList :  (MonoT, optimisé pour l'écriture)                           // liste chaîné
+        * Vector : (MultiT, accès direct, optimisé pour la lecture)                 // Obsolete Collection pour java 21
+        * Stack (étend Vector) : MultiT, LIFO(pile)
+
+    Ces 4 classes ont les spécificités de : 
+        - permettent de travailler avec des elements ordonnées,
+        - acceptent les doublons,
+        - acceptent les valeurs nulles
+
+
+    utilisation : 
+        * ArrayList<nomClass> nomVariable = new ArrayList<nomClass>(10);        // nomClass => String, Integer, NomClasse,... (pas de type primitive)
+                                                                                // 10 => capacity (on peut ne pas spécifié paske c'est dynamique)
+                                                                                
+        * Vector<nomClass> nomVariable = new Vector<nomClass>(10);              // pour la solution multithread
+
+            --------------------------------------------------------------------------------------------------
+                Aspect	            Array	                        ArrayList
+            --------------------------------------------------------------------------------------------------
+                Taille	            Fixe	                        Dynamique
+                Type de données	    Primitifs et Objets	            Uniquement Objets
+                Méthodes	        Pas de méthodes intégrées	    Méthodes pour ajouter, supprimer, etc.
+                Performance	        Plus rapide pour des 	        Plus lent en raison de sa flexibilité
+                                    opérations simples
+                Framework 	        Pas directement compatible	    Compatible
+                Collections
+            --------------------------------------------------------------------------------------------------
+            
+
+            - nomVariable.add(cat) => ajouter l'instance cat de Cat dans nomVariable de type ArrayList<Cat>
+            - nomVariable.add(25) => ajouter le nombre "25" dans nomVariable de type ArrayList<Integer>
+            - nomVariable.get(2) => récupérer le 3è element de collection nomVariable (accès direct)
+
+
+        * LinkedList<nomClass> nomVariable2 = new LinkedList<nomClass>();               // liste chaînée
+            
+            - nomVariable2.add(cat) => ajouter l'instance cat de Cat dans nomVariable2 de type ArrayList<Cat> à la fin
+            - nomVariable2.addFirst(cat) => ajouter l'instance cat de Cat dans nomVariable2 de type ArrayList<Cat> au debut
+            - nomVariable2.remove(cat) => enlever l'instance cat de Cat dans nomVariable2 de type ArrayList<Cat> à la fin
+            - nomVariable2.removeFirst(cat) => enlever l'instance cat de Cat dans nomVariable2 de type ArrayList<Cat> au debut
+            - nomVariable2.getFirst()
+            ~ ListIterator : on doit itérer la linkedList parce que ses elements n'est pas accessible directement 
+                ListIterator<nomClass> iter = nomCollection.listIterator();             // import java.util.ListIterator
+                while (iter.hasNext()) {
+                    iter.next().nomMethodeClasse();                                      // iter.next = element
+                }
+
+
+        Avantages
+            Insertion et suppression rapides (surtout au début ou au milieu).
+            Ordre conservé.
+            Peut être utilisée comme une pile (Stack), une file ou une file double (Deque).
+        Inconvénients
+            Accès lent par index : Chaque accès nécessite de parcourir la liste depuis le début ou la fin.
+            Consommation mémoire élevée : Chaque nœud utilise plus de mémoire (en raison des références au précédent et au suivant).
+            Non thread-safe : Nécessite une synchronisation manuelle si utilisée par plusieurs threads.
+
+            --------------------------------------------------------------------------------------------------
+                Aspect	            LinkedList	                    ArrayList
+            --------------------------------------------------------------------------------------------------
+                Taille dynamique	Oui	                            Oui
+                Accès par index	    Lent (parcours des nœuds)	    Rapide (tableau sous-jacent)
+                Ajout/Suppression	Rapide pour début/milieu	    Rapide pour la fin
+                Structure interne	Doublement chaînée	            Basée sur un tableau
+                Mémoire	            Plus gourmand 	                Moins gourmand
+                                    (stocke des références)
+            --------------------------------------------------------------------------------------------------
+
+
+
+
+-------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------
+
+
+NB : Général
+    * La JVM fait partie du Java Runtime Environment (JRE). Pour exécuter un programme Java, 
+        il suffit d'installer le JRE approprié à votre plateforme. Les développeurs utilisent 
+        souvent le Java Development Kit (JDK), qui inclut le JRE ainsi que les outils nécessaires 
+        pour écrire et compiler le code Java.
+    * C'est le système d'exploitation (avec le JVM : Java Virtual Machine) qui gère 
+        automatiquement notre mémoire. On ne peut pas choisir manuellement où à quel adresse 
+        mémoire on veut stoker un variable
+    * La JVM est une couche d'abstraction qui permet à Java d'être portable, performant et sécurisé. 
+        Sans elle, Java ne serait pas aussi universel et polyvalent. C'est elle qui traduit le bytecode (.class)
+        indépendant en instructions spécifiques à votre machine, tout en gérant des aspects complexes 
+        comme la mémoire et la sécurité.
+
+    * Tou les objets java (Array, String, objet d'une classe,...) hérite du classe "Object"
+        et peuvent utiliser ses méthodes comme : equals, toString 
+
+    * Monothread : utilise 1 seul thread ou fil d’exécution           // StringBuilder 
+    * Multithread : utilise plusieurs thread ou fil d’exécution       // StringBuffer
+
+    * Les concepts de monothreading/multithreading et synchrone/asynchrone sont liés mais DIFFERENT.
+    Le monothreading/multithreading concerne l'exécution de plusieurs tâches et le nombre de threads. 
+    Le synchrone/asynchrone concerne l'exécution d' une seule tâche et l'attente ou non de son résultat. 
+    Comprendre cette différence est crucial pour concevoir des applications performantes et réactives.
+    * NB : souvent on utilise le monothreading pour une question de performance. 
+
+    * si on veut déplacer un fichier ou modifier des choses (comme le nom du package, les import,...) dans java, 
+        il faut supprimer le bytecode(.class) et le recompiler 
+
+    * les erreurs dans le console s'appelle les "Piles" (ce sont des informations d'erreurs qui s'empilent) 
+
+    * il faut toujours mettre dans le bloc try-catch les methodes qui peuvent déclencher une exception
+
+
+CONTEXT MENU DES EXTENSIONS JAVA VSCODE ---------------------------------------------------------------------------
+
+
+    ----------------------------------------------------------------------------------------------------
+    Option	                        Quand l'utiliser ?
+    ----------------------------------------------------------------------------------------------------
+    Evaluate in Debug Console	    Pendant le débogage pour tester des expressions.
+    Add Inline Breakpoint	        Pour arrêter l'exécution à une ligne spécifique.
+    Add to Watch	                Pour suivre une variable pendant l'exécution.
+    Run to Cursor	                Pour exécuter jusqu'à une ligne où il y a le curseur.
+    Run Java	                    Pour exécuter un fichier Java rapidement.
+    Run Project                     Without Debugging	Pour exécuter tout le projet sans interruption.
+    Debug Java	                    Pour déboguer un seul fichier.
+    Debug Project	                Pour analyser tout le projet en mode débogage.
+    ----------------------------------------------------------------------------------------------------
+
+
+1. Evaluate in Debug Console
+    Description :
+        - Cette option est disponible lorsque vous êtes en mode débogage.
+        - Elle vous permet d'évaluer une expression ou une ligne de code directement dans la console de débogage.
+    Utilité :
+        - Par exemple, si vous voulez vérifier la valeur d'une variable ou exécuter une méthode pendant l'exécution du programme.
+
+
+2. Add Inline Breakpoint (Raccourci : Shift+F9)
+    Description :
+        - Ajoute un point d'arrêt directement sur la ligne de code où vous cliquez.
+        - Cela permet au débogueur de s'arrêter à cet endroit lors de l'exécution.
+    Utilité :
+        - Utile pour examiner les valeurs des variables ou comprendre le flux du programme à des étapes spécifiques.
+        - Les points d'arrêt sont essentiels pour déboguer un programme.
+
+
+3. Add to Watch
+    Description :
+        - Ajoute une variable ou une expression à la liste de surveillance dans le panneau de débogage.
+        - La liste de surveillance vous permet de suivre les changements de valeur de cette variable pendant l'exécution du programme.
+    Utilité :
+        - Pratique pour surveiller des variables importantes et voir leur évolution sans avoir à les rechercher dans le code.
+
+
+4. Run to Cursor
+    Description :
+        - Lance le programme en mode débogage et s'arrête à la ligne où le curseur est positionné.
+    Utilité :
+        - Permet d'exécuter le programme rapidement jusqu'à une section spécifique sans avoir à ajouter un point d'arrêt.
+
+
+5. Run Java
+    Description :
+        - Exécute uniquement le fichier Java sélectionné, sans aucun débogage.
+    Utilité :
+        - Simplement pour tester un fichier ou exécuter un programme rapidement sans vérifier les erreurs ou comportements détaillés.
+
+
+6. Run Project Without Debugging
+    Description :
+        - Exécute l'intégralité du projet Java sans activer le mode débogage.
+    Utilité :
+        - Utile pour voir si le projet fonctionne correctement de bout en bout sans interruptions dues aux points d'arrêt.
+
+
+7. Debug Java
+    Description :
+        - Lance le fichier Java sélectionné en mode débogage.
+        - Le programme s'arrête automatiquement à tous les points d'arrêt configurés.
+    Utilité :
+        - Idéal pour identifier les bugs ou analyser le comportement de sections spécifiques du fichier.
+
+
+8. Debug Project
+    Description :
+        - Débogue l'ensemble du projet Java (et non seulement le fichier actuel).
+        - Cela inclut tous les fichiers nécessaires à l'exécution, ainsi que les dépendances externes.
+    Utilité :
+        - Recommandé si votre projet Java comporte plusieurs fichiers ou classes interconnectés, et que vous souhaitez déboguer le comportement global.
+
+
+
+
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+-------------------------  CONTEXTE DEVOPS : OUTILS ET LEURS RÔLES  -------------------------------------
+---------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+
+    Git : Gestion du versioning du code source (suivi des modifications, collaboration).
+    Maven / Gradle : Automatisation des builds (compilation, tests, packaging).
+    Docker : Création de conteneurs d'applications (encapsulation et portabilité).
+    Kubernetes : Orchestration des conteneurs (déploiement, mise à l'échelle, gestion).
+    Jenkins : Automatisation des pipelines CI/CD (intégration et déploiement continus).
+    JUnit : Tests unitaires (vérification du bon fonctionnement du code).
+    Cycle de vie d'un build Maven : Commandes et actions
+
+    mvn compile : Compile le code source Java (.java → .class). Sortie : target/classes.
+    mvn test : Exécute les tests unitaires. Sortie : target/surefire-reports.
+    mvn package : Crée un package distribuable :
+    .JAR : pour les applications Java standard.
+    .WAR : pour les applications web. Sortie : target.
+    mvn install : Installe le package dans le dépôt local Maven (~/.m2/repository).
+    mvn deploy : Déploie le package dans un dépôt distant (ex: serveur d'entreprise, Maven Central).
+    mvn site : Génère la documentation du projet.
+
+Tableau récapitulatif :
+----------------------------------------------------------------------------------------------------
+Commande Maven	    Action	                                Répertoire de sortie (principal)        |
+----------------------------------------------------------------------------------------------------|
+    mvn compile	    Compilation du code source Java	        target/classes                          |
+    mvn test	    Exécution des tests unitaires	        target/surefire-reports                 |
+    mvn package	    Création du package (JAR ou WAR)	    target                                  |
+    mvn install	    Installation du package dans            ~/.m2/repository                        |
+                    le dépôt local	                                                                |
+    mvn deploy	    Déploiement du package dans un          Dépôt distant                           |
+                    dépôt distant	                                                                |
+    mvn site	    Génération de la documentation          target/site                             |
+                    du projet	                                                                    |
+----------------------------------------------------------------------------------------------------
+

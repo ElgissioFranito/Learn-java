@@ -1,16 +1,16 @@
 package services;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
-import java.util.Scanner;
-import java.util.Vector;        // Obsolete Collection
-
+import java.util.Stack;
+import java.util.Vector;
 import mypackages.Person;
 import mypackages.Player;
-import mypackages.Software;
+import mypackages.Software;        // Obsolete Collection
 
 class App {
 
@@ -66,7 +66,7 @@ class App {
         // tab1 = { 81, 25, 37 };               // OK
         System.out.println("tab length est " + tab.length);
         System.out.println("tabX length est " + tabX.length);
-        System.out.println("tab = tabX est " + tabX.equals(tab));
+        System.out.println("tab = tabX est " + Arrays.equals(tabX, tab));
 
         for (int element : tabX) {                // foreach
             System.out.println(element);
@@ -127,22 +127,22 @@ class App {
         System.out.println(sb);
         System.out.println("-----------------------");
 
-        System.out.println("BufferReader");
-        InputStreamReader isr = new InputStreamReader(System.in);
-        BufferedReader br = new BufferedReader(isr);
+        // System.out.println("BufferReader");
+        // InputStreamReader isr = new InputStreamReader(System.in);
+        // BufferedReader br = new BufferedReader(isr);
         
-        System.out.print("Quel est votre nom ? ");
-        String name = br.readLine();
-        System.out.println("Bonjour " + name);
-        System.out.println("-----------------------");
+        // System.out.print("Quel est votre nom ? ");
+        // String name = br.readLine();
+        // System.out.println("Bonjour " + name);
+        // System.out.println("-----------------------");
         
-        System.out.println("Scanner");
-        Scanner sc = new Scanner(System.in);                    // Convert to try-with-resources
+        // System.out.println("Scanner");
+        // Scanner sc = new Scanner(System.in);                    // Convert to try-with-resources
         
-        System.out.print("Quel est votre age ? ");
-        int age = sc.nextInt();
-        System.out.println("Vous avez " + age + " ans ");
-        sc.close();
+        // System.out.print("Quel est votre age ? ");
+        // int age = sc.nextInt();
+        // System.out.println("Vous avez " + age + " ans ");
+        // sc.close();
         
         System.out.println("-----------------------");
         System.out.println("Les List : ArrayList & Vector");
@@ -174,11 +174,12 @@ class App {
 
         
         System.out.println("-----------------------");
-        System.out.println("Les List : ArrayList & Vector");
+        System.out.println("Les List : LinkedList");
         
         LinkedList<Software> linkedList = new LinkedList<>();
         linkedList.add(software1);
         linkedList.addFirst(software2);
+        linkedList.addLast(software3);
         
         System.out.println("myFirst element by getFirst() : " + linkedList.getFirst());
 
@@ -191,6 +192,39 @@ class App {
             Software element = iter.next();
             System.out.println("le licence du logiciel est : " + element.getLicence());
         }
+        
+        System.out.println("-----------------------");
+        System.out.println("Les List : Stack");
+        
+        Stack<Player> stack = new Stack<>();
+        stack.push(player1);
+        stack.push(player2);
+        stack.push(player3);
+        
+        System.out.println("myLast element by peek() : " + stack.peek().getName());
+        stack.pop();
+                
+        ListIterator<Player> iterStack = stack.listIterator();         
+        while (iterStack.hasNext()) {
+            Player element = iterStack.next();
+            System.out.println("l' element est : " + element.getName());
+        } 
+        
+        System.out.println("-----------------------");
+        System.out.println("Les File : ArrayDeque");
+
+        ArrayDeque<Player> deque = new ArrayDeque<>();
+
+        deque.addLast(player1);
+        deque.addLast(player2);
+        deque.addLast(player3);
+
+        Iterator<Player> iteraDeq = deque.iterator();
+
+        while (iteraDeq.hasNext()) {
+            System.out.println(iteraDeq.next().getName() );
+        }
+
 
     }
 

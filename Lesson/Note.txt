@@ -399,36 +399,38 @@ Les classes qui implements l'interface collection auront ces methodes :
     * contains(ELEMENT) : vérifier si elle contient un element
     * isEmpty() : vérifier si elle est vide
     * size() : vérifier le nombre d'element (length)
+    * toArray() : transformer en Array classique
     * ... (voir la documentation)
     - Collections.sort(collections) => trie les elements de la collection (import java.util.Collections)
+
 
 Les classes qui implements l'interface collection :
     * ArrayList, LinkedList, Vector, HashSet, TreeSet, Stack, HashMap, TreeMap
 
 
+Définition du fichier "ressources/tableau-specificite-des-classes-de-collections.png":
+    ~ ordonnées : indique si les éléments de la collection conservent l'ordre dans lequel ils ont été ajoutés
+    ~ doublons : précise si la collection autorise plusieurs occurrences du même élément (doublons)
+    ~ accès direct : indique si les éléments de la collection peuvent être accédés rapidement par un index ou une clé. 
+                    Si Non, nécessite une itération pour trouver un élément.
+    ~ valeurs nulles : indique si la collection peut contenir des valeurs nulles (éléments ou clés nulles)
+    ~ thread safe : Précise si la collection est sûre pour une utilisation concurrente (accès simultané par plusieurs 
+                    threads sans provoquer d'erreurs ou de comportements inattendus).
+                    ✅ : La collection est conçue pour être utilisée dans des environnements multithreads.
+                    ❌ : La collection n'est pas thread-safe et nécessite une synchronisation explicite si 
+                            utilisée avec plusieurs threads.
  
 LISTE ---------------------------------------------------------------------------------------------
 
-    Définition du fichier "ressources/tableau-specificite-des-classes-de-collections.png":
-        ~ ordonnées : indique si les éléments de la collection conservent l'ordre dans lequel ils ont été ajoutés
-        ~ doublons : précise si la collection autorise plusieurs occurrences du même élément (doublons)
-        ~ accès direct : indique si les éléments de la collection peuvent être accédés rapidement par un index ou une clé. 
-                        Si Non, nécessite une itération pour trouver un élément.
-        ~ valeurs nulles : indique si la collection peut contenir des valeurs nulles (éléments ou clés nulles)
-        ~ thread safe : Précise si la collection est sûre pour une utilisation concurrente (accès simultané par plusieurs 
-                        threads sans provoquer d'erreurs ou de comportements inattendus).
-                        ✅ : La collection est conçue pour être utilisée dans des environnements multithreads.
-                        ❌ : La collection n'est pas thread-safe et nécessite une synchronisation explicite si 
-                                utilisée avec plusieurs threads.
 
-    Les classes qui implements l'interface LIST (LIST étend COLLECTION)
+    Les classes qui implements l'interface LIST sont : (LIST étend de COLLECTION)
 
         * ArrayList : (MonoT, accès direct, optimisé pour la lecture)               // Tableau dynamique
-        * LinkedList :  (MonoT, optimisé pour l'écriture)                           // liste chaîné
-        * Vector : (MultiT, accès direct, optimisé pour la lecture)                 // Obsolete Collection pour java 21
-        * Stack (étend Vector) : MultiT, LIFO(pile)
+        * LinkedList :  (MonoT, optimisé pour l'écriture)                           // liste chaîné (doublement chaîné)
+        * Vector : (MultiT, accès direct, optimisé pour la lecture)                 // Obsolete pour java 21
+        * Stack (étend Vector) : MultiT, LIFO(pile), extends Vector
 
-    Ces 4 classes ont les spécificités de : 
+    Ces 04 classes ont les spécificités de : 
         - permettent de travailler avec des elements ordonnées,
         - acceptent les doublons,
         - acceptent les valeurs nulles
@@ -460,10 +462,10 @@ LISTE --------------------------------------------------------------------------
 
         * LinkedList<nomClass> nomVariable2 = new LinkedList<nomClass>();               // liste chaînée
             
-            - nomVariable2.add(cat) => ajouter l'instance cat de Cat dans nomVariable2 de type ArrayList<Cat> à la fin
-            - nomVariable2.addFirst(cat) => ajouter l'instance cat de Cat dans nomVariable2 de type ArrayList<Cat> au debut
-            - nomVariable2.remove(cat) => enlever l'instance cat de Cat dans nomVariable2 de type ArrayList<Cat> à la fin
-            - nomVariable2.removeFirst(cat) => enlever l'instance cat de Cat dans nomVariable2 de type ArrayList<Cat> au debut
+            - nomVariable2.add(cat) => ajouter l'instance cat de Cat dans nomVariable2 de type LinkedList<Cat> à la fin
+            - nomVariable2.addFirst(cat) => ajouter l'instance cat de Cat dans nomVariable2 de type LinkedList<Cat> au debut
+            - nomVariable2.remove(cat) => enlever l'instance cat de Cat dans nomVariable2 de type LinkedList<Cat> à la fin
+            - nomVariable2.removeFirst(cat) => enlever l'instance cat de Cat dans nomVariable2 de type LinkedList<Cat> au debut
             - nomVariable2.getFirst()
             ~ ListIterator : on doit itérer la linkedList parce que ses elements n'est pas accessible directement 
                 ListIterator<nomClass> iter = nomCollection.listIterator();             // import java.util.ListIterator
@@ -472,25 +474,177 @@ LISTE --------------------------------------------------------------------------
                 }
 
 
-        Avantages
-            Insertion et suppression rapides (surtout au début ou au milieu).
-            Ordre conservé.
-            Peut être utilisée comme une pile (Stack), une file ou une file double (Deque).
-        Inconvénients
-            Accès lent par index : Chaque accès nécessite de parcourir la liste depuis le début ou la fin.
-            Consommation mémoire élevée : Chaque nœud utilise plus de mémoire (en raison des références au précédent et au suivant).
-            Non thread-safe : Nécessite une synchronisation manuelle si utilisée par plusieurs threads.
+            Avantages
+                Insertion et suppression rapides (surtout au début ou au milieu).
+                Ordre conservé.
+                Peut être utilisée comme une pile (Stack), une file ou une file double (Deque).
+            Inconvénients
+                Accès lent par index : Chaque accès nécessite de parcourir la liste depuis le début ou la fin.
+                Consommation mémoire élevée : Chaque nœud utilise plus de mémoire (en raison des références au précédent et au suivant).
+                Non thread-safe : Nécessite une synchronisation manuelle si utilisée par plusieurs threads.
 
-            --------------------------------------------------------------------------------------------------
-                Aspect	            LinkedList	                    ArrayList
-            --------------------------------------------------------------------------------------------------
-                Taille dynamique	Oui	                            Oui
-                Accès par index	    Lent (parcours des nœuds)	    Rapide (tableau sous-jacent)
-                Ajout/Suppression	Rapide pour début/milieu	    Rapide pour la fin
-                Structure interne	Doublement chaînée	            Basée sur un tableau
-                Mémoire	            Plus gourmand 	                Moins gourmand
-                                    (stocke des références)
-            --------------------------------------------------------------------------------------------------
+                --------------------------------------------------------------------------------------------------
+                    Aspect	            LinkedList	                    ArrayList
+                --------------------------------------------------------------------------------------------------
+                    Taille dynamique	Oui	                            Oui
+                    Accès par index	    Lent (parcours des nœuds)	    Rapide (tableau sous-jacent)
+                    Ajout/Suppression	Rapide pour début/milieu	    Rapide pour la fin
+                    Structure interne	Doublement chaînée	            Basée sur un tableau
+                    Mémoire	            Plus gourmand 	                Moins gourmand
+                                        (stocke des références)
+                --------------------------------------------------------------------------------------------------
+
+
+        * Stack<nomClass> nomVariable3 = new Stack<nomClass>();               // pile (LIFO), import java.util.ListIterator
+        
+            - nomVariable3.push(cat) => ajouter l'instance cat de Cat dans la collection nomVariable3
+            - nomVariable3.pop() => supprimer le dernier instance dans la collection nomVariable3 
+            - nomVariable3.peek() => récupérer le dernier instance dans la collection nomVariable3
+
+            
+FILE (Queue) - FIFO (First in, First out) -----------------------------------------------------------
+
+    L’interface "Queue" représente une file d'attente (FIFO : First In, First Out).c'est une enfant de 
+    Collection dans ressources/interface-enfant-de-collection.png: (file d'attente)
+    
+    Les deux principales sous-interfaces :
+
+        - PriorityQueue
+            Une PriorityQueue est une file où les éléments ne sont pas nécessairement traités selon leur ordre d'insertion, 
+            mais selon leur priorité définie par un ordre naturel (Comparable) ou un comparateur (Comparator).
+
+            * Caractéristiques :
+                ~ ✅ Ordonnée : Ordre basé sur la priorité des éléments.
+                ~ ✅ Doublons
+                ~ ❌ accès direct.
+                ~ ❌ non thread-safe.
+                ~ ❌ valeurs null.
+
+            * PriorityQueue<nomClass> queue = new PriorityQueue<>();        // nomClass n'a pas besoin d'implementer l'interface comparable 
+                                                                                parce qu'il est ordonnée par l'ordre d'insertion
+            * queue.offer(element) => ajout d'élément
+            * queue.poll(element) => récupérer ensuite supprimer le 1er élément selon l'ordre de priorité
+
+        
+        - Deque (Double-Ended Queue = Tableau doublement chaînée)
+            L’interface "Deque" est une file d'attente qui permet d'ajouter et de retirer des éléments à 
+            la fois au début et à la fin. Elle est plus flexible que Queue et peut être utilisée comme une 
+            pile (LIFO) ou une file classique (FIFO).
+
+            * Caractéristiques :
+                ~ ✅ Ordonnée : Ordre d'insertion.
+                ~ ✅ Doublons
+                ~ ❌ accès direct.
+                ~ ❌ non thread-safe.
+                ~ ❌ valeurs null.
+                ✅ Permet l'ajout/suppression des deux côtés.
+                ✅ Implémentée par LinkedList ou ArrayDeque(plus rapide).
+                ✅ ArrayDeque est plus rapide que Stack et ne permet pas null.
+
+            * ArrayDeque :
+                ArrayDeque<nomClass> adeque = new ArrayDeque<>();            // nomClass doit implementer l'interface comparable 
+                                                                            // les Integer, String,... implémentent déjà comparable
+                ~ adeque.addFirst(element) / addLast(element)
+                ~ adeque.removeFirst() / removeLast()
+                ~ adeque.getFirst() / getLast()
+                ~ adeque.offertFirst(element) / offertLast(element)
+                ~ adeque.pollFirst() / pollLast()
+                ~ adeque.peekFirst() / peekLast()
+                ~ adeque.removeFirstOccurrence(4) : supprimer le 1er valeur "4" du collection "adeque"
+                ~ adeque.removeLastOccurrence(5) : supprimer le dernier valeur "4" du collection "adeque"
+
+
+
+ENSEMBLE (SET) ------------------------------------------------------------------
+
+    L'interface Set<E> (du package java.util) est une collection qui ne permet pas les doublons. 
+    Elle est principalement utilisée lorsque vous devez stocker des éléments uniques et que l'ordre 
+    des éléments n'est pas votre priorité.
+    
+    * Caractéristiques :
+        ❌ Doublons.
+        ❌ non thread-safe.
+
+    1. HashSet – Unicité sans ordre
+        Un HashSet est basé sur une table de hachage, garantissant que chaque élément est unique 
+        grâce à la méthode hashCode().
+
+        Caractéristiques :
+            ❌ ordonnées.
+            ❌ Non thread-safe
+            ✅ accès direct.
+            ✅ Autorise un élément null, mais pas plusieurs.
+            ✅ Très performant pour les recherches, ajouts et suppressions (O(1) en moyenne).
+
+        Syntaxe : 
+            HashSet<String> set = new HashSet<>();
+
+    
+    2. LinkedHashSet – Unicité avec ordre d’insertion
+        C’est une variante de HashSet qui préserve l’ordre d’insertion des éléments.
+
+        Caractéristiques :
+            ✅ ordonnée : l’ordre d’insertion.
+            ✅ Un peu plus lent que HashSet, car il utilise une liste doublement chaînée pour suivre l’ordre.
+            ✅ Permet un null unique.
+            
+        Syntaxe : 
+            HashSet<String> set = new HashSet<>();
+
+
+    3. TreeSet – Unicité avec tri automatique (arbre binaire)
+        Un TreeSet est basé sur un arbre binaire équilibré (Red-Black Tree), ce qui permet 
+        de stocker les éléments triés.
+
+        Caractéristiques :
+            ✅ ordonnée : l’ordre naturel (Comparable) ou un Comparator personnalisé.
+            ❌ Non thread-safe
+            ❌ accès direct.
+            ❌ valeurs null.
+            ❌ Plus lent que HashSet pour l’insertion et la recherche (O(log N) au lieu de O(1)).
+            
+        Syntaxe : 
+            TreeSet<Integer> TSet = new TreeSet<>();
+
+            ~ TSet.first(element) / last(element) : récupérer
+            ~ TSet.headSet(element) : récupérer un sous ensemble de la collection depuis le debut jusqu'à "element" (element exclus)
+            ~ TSet.tailSet(element) : récupérer un sous ensemble de la collection depuis "element" jusqu'à la fin (element inclus)
+            ~ TSet.subSet(elem1, elem2) : récupérer un sous ensemble de la collection depuis "elem1" jusqu'à la "elem2" (elem1 inclus, elem2 exclus)
+
+
+
+    NB : - tous les Classes d'elements qui vont s'ajouter dans la collection "SET" vont devoir ré-implementer
+            les methodes "hashCode()" et "equals()" pour que les interface "SET" recherche les doublons. (sauf Integer, String,...)
+         - les elements de "TreeSet" devoir ré-implementer les comparators.
+
+
+
+
+CARTE (MAP) (key : value) ------------------------------------------------------------------
+
+    L'interface Map<K, V> (du package java.util) représente une collection clé-valeur, où :
+        - Chaque clé est unique (pas de doublons de clé).
+        - Chaque valeur est associée à une clé.
+        - L'accès aux valeurs se fait via les clés.
+    
+    * Caractéristiques :
+        ✅ accès direct.
+        ❌ Doublons.
+        ❌ non thread-safe.
+
+    1. HashMap – Rapide mais sans ordre
+        Une HashMap est basée sur une table de hachage et permet un accès très rapide aux valeurs via 
+        leurs clés.
+
+        Caractéristiques :
+            ❌ ordonnée
+            ✅ une seule clé null et plusieurs valeurs null.
+            ✅ Excellente performance pour la recherche, l’ajout et la suppression (O(1) en moyenne).
+
+        Syntaxe : 
+            HashMap<String, String> HMap = new HashMap<>();
+
+            ~ HMap.put(element) / last(element) : récupérer
 
 
 
@@ -528,7 +682,7 @@ NB : Général
     * si on veut déplacer un fichier ou modifier des choses (comme le nom du package, les import,...) dans java, 
         il faut supprimer le bytecode(.class) et le recompiler 
 
-    * les erreurs dans le console s'appelle les "Piles" (ce sont des informations d'erreurs qui s'empilent) 
+    * les erreurs dans le console s'appelle les "Piles d'erreurs" (ce sont des informations d'erreurs qui s'empilent) 
 
     * il faut toujours mettre dans le bloc try-catch les methodes qui peuvent déclencher une exception
 

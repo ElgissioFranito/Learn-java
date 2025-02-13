@@ -629,7 +629,7 @@ CARTE (MAP) (key : value) ------------------------------------------------------
     
     * Caractéristiques :
         ✅ accès direct.
-        ❌ Doublons.
+        ❌ Doublons (key).
         ❌ non thread-safe.
 
     1. HashMap – Rapide mais sans ordre
@@ -644,8 +644,549 @@ CARTE (MAP) (key : value) ------------------------------------------------------
         Syntaxe : 
             HashMap<String, String> HMap = new HashMap<>();
 
-            ~ HMap.put(element) / last(element) : récupérer
+            ~ HMap.put(key, value) : ajouter un element
+            ~ HMap.get(key) : récupérer un la valeur de l'element qui a la clé "key"
+            ~ HMap.containsKey(key) / contains(value)
+            ~ for( String k : HMap.keySet()) : parcours HMap
+                * keySet() => ensemble des clés
+                * values() => ensemble des valeurs
+            ~ for( Map.Entry<String, String> entry : HMap.entrySet()) => ensemble des clés-valeurs (des entrées, des enregistrements)
+                * entry.getKey()
+                * entry.getValue()
 
+
+    2. LinkedHashMap – Ordre d’insertion préservé
+        Un LinkedHashMap est une version améliorée de HashMap qui conserve l’ordre d’insertion des éléments.
+
+        Caractéristiques :
+            ✅ Conserve l’ordre d’insertion.
+            ✅ Permet une seule clé null et plusieurs valeurs null.
+            ❌ Légèrement plus lent que HashMap, car il maintient une liste chaînée pour l’ordre.
+
+        Syntaxe : 
+            LinkedHashMap<Integer, String> LHmap = new LinkedHashMap<>();
+
+
+    3. TreeMap – Tri automatique des clés
+        Un TreeMap est basé sur un arbre binaire équilibré (Red-Black Tree) et trie automatiquement les clés.
+
+        Caractéristiques :
+            ✅ Ordonnée : ordre naturel (Comparable) ou un Comparator.
+            ✅ Ne permet pas de clé null, mais permet des valeurs null.
+            ❌ Plus lent que HashMap pour l’ajout et la suppression (O(log N) au lieu de O(1)).
+
+        Syntaxe : 
+            TreeMap<Integer, String> Tmap = new TreeMap<>();
+
+            ~ Tmap.put(element) / last(element) : ajout / récupérer
+            ~ TreeMap<Integer, String> map = new TreeMap<>((a, b) -> b - a);        // Trier (alphabet décroissant)
+
+    -----------------------------------------------------------------------------------------------------------------
+    Critère	            HashMap	              LinkedHashMap	            TreeMap	            Hashtable
+    -----------------------------------------------------------------------------------------------------------------
+    Ordre des           ❌ Non garanti	    ✅ Ordre d’insertion	    🔢 Trié par clé	    ❌ Non garanti
+    éléments	
+    Performance	        🚀 O(1)	             🐢 O(1) (plus lent)	  🐌 O(log N)	      🐢 O(1) (moins efficace)
+    (Ajout/Suppression)
+    Recherche	        O(1)	              O(1)	                    O(log N)	        O(1)
+    Clé null autorisée	✅ Oui (une seule)	✅ Oui (une seule)	    ❌ Non	            ❌ Non
+    Valeur null 	    ✅ Oui	            ✅ Oui	                ✅ Oui	            ❌ Non
+    autorisée
+    Thread-safe ?	    ❌ Non	            ❌ Non	                ❌ Non	            ✅ Oui
+    -----------------------------------------------------------------------------------------------------------------
+    
+    Quand utiliser quel Map ?
+        ✔ Utilisez HashMap si vous voulez les meilleures performances sans vous soucier de l’ordre.
+        ✔ Utilisez LinkedHashMap si vous voulez conserver l’ordre d’insertion.
+        ✔ Utilisez TreeMap si vous avez besoin d’un tri automatique des clés.
+        ✔ Évitez Hashtable, utilisez plutôt ConcurrentHashMap si vous avez besoin d’une Map
+
+
+
+ENUMERATION (ENUM) -------------------------------------------------------------------------
+
+    En Java, une énumération (ou "enum") est un type de classe spécial qui permet de définir un 
+    ensemble fixe de constantes nommées.
+        public enum Jour {
+            LUNDI, MARDI, MERCREDI, JEUDI, VENDREDI, SAMEDI, DIMANCHE
+        }
+
+        Jour jour = Jour.LUNDI;
+        System.out.println(jour);       // LUNDI
+
+
+    * Associer des valeurs avec les "enum"
+        public enum Statut {
+            ACTIF(1), INACTIF(0), SUSPENDU(-1);
+
+            private int code; // Attribut
+
+            Statut(int code) { // Constructeur
+                this.code = code;
+            }
+
+            public int getCode() { // Getter
+                return code;
+            }
+        }
+
+        Statut s = Statut.ACTIF;
+        System.out.println(s.getCode()); // 1
+
+
+    * Ajouter des méthodes (ex : Trouver un enum à partir d’un code)
+
+        public enum Statut {
+            ACTIF(1), INACTIF(0), SUSPENDU(-1);
+
+            private int code;
+
+            Statut(int code) {
+                this.code = code;
+            }
+
+            public int getCode() {
+                return code;
+            }
+
+            public static Statut fromCode(int code) {
+                for (Statut s : Statut.values()) {
+                    if (s.getCode() == code) {
+                        return s;
+                    }
+                }
+                throw new IllegalArgumentException("Code inconnu : " + code);
+            }
+        }
+
+        Statut s = Statut.fromCode(1);
+        System.out.println(s); // ACTIF
+
+
+    * Différence entre enum et final static
+        Avant les enum, on utilisait souvent final static pour représenter des constantes :
+
+            public class Statut {
+                public static final int ACTIF = 1;
+                public static final int INACTIF = 0;
+                public static final int SUSPENDU = -1;
+            }
+
+        📌 Pourquoi enum est mieux ?
+            ✔ Sécurité → Impossible de mettre une valeur inconnue (ex: Statut.ACTIF est sûr).
+            ✔ Lisibilité → Pas besoin de se souvenir des valeurs (1, 0, -1 sont abstraits).
+            ✔ Fonctionnalités → Peut contenir des méthodes et être utilisé avec switch.
+            ✔ comparaison → avec simplemnt "=="
+
+    
+    ~ Statut.valueOf(element) : recuperer la valeur d'éléments de l'enum "Statut"
+    ~ element.name() : recuperer le nom d'éléments d'une enum
+    ~ element.ordinal() : recuperer le rang de l'enum (comme index)
+    ~ for (Statut s : Statut.values()) : parcours (values => obtenir tous les éléments d'une enum)
+    
+
+NB : 
+    - on ne peut pas étendre d'une Classe ni étendre une Enum (parce que c'est une classe final)
+    - on ne peut pas créer un instance d'un Enum (parce que le constructeur est privé)
+
+
+
+
+GENERICITE <T> --------------------------------------------------------------------------
+
+    La généricité en Java est une fonctionnalité qui permet de créer des classes, des interfaces et des 
+    méthodes qui peuvent être utilisées avec différents types de données sans avoir à les spécifier 
+    explicitement à chaque fois :
+
+            public class Boite<T> {
+                private T contenu;
+
+                public Boite(T contenu) {
+                    this.contenu = contenu;
+                }
+
+                public T getContenu() {
+                    return contenu;
+                }
+
+                public void setContenu(T contenu) {
+                    this.contenu = contenu;
+                }
+            }
+
+            Boite<Integer> boiteEntier = new Boite<>(10);
+            Boite<String> boiteChaine = new Boite<>("Bonjour");
+
+
+        ~ public class Boite<T extends Number> : accepte tous les Objet qui étend la classe "Number"    (Box<Double> doubleBox = new Box<>(5.5))
+        ~ class KeyValue<K, V> implements Pair<K, V> : implement l'interface Pair<K, V>                 ( Pair<Integer, String> p = new KeyValue<>(1, "One"); )
+        ~ public static void printNumbers(List<? extends Number> numbers)
+                List<Integer> intList = List.of(1, 2, 3);
+                printNumbers(intList); // ✅ OK, Integer est un Number
+        ~ public static void addInteger(List<? super Integer> list)
+                List<Number> numList = new ArrayList<>();
+                addInteger(numList); // ✅ OK, Number est une superclasse de Integer
+
+    NB :
+        En Java, on ne peut pas créer directement un tableau de type générique.
+        Solution : Utiliser Array.newInstance()
+            class Box<T> {
+                private T[] array;
+
+                @SuppressWarnings("unchecked")
+                public Box(Class<T> clazz, int size) {
+                    array = (T[]) java.lang.reflect.Array.newInstance(clazz, size);
+                }
+            }
+        
+        Box<String> stringBox = new Box<>(String.class, 10);
+
+    -----------------------------------------------------------------------------------------------------
+        Critère	            List<?> (Wildcard générique)	    List<T> (Type paramétré)
+    -----------------------------------------------------------------------------------------------------
+        Flexibilité	        Accepte toutes les listes 	        Type unique défini (List<T>, 
+                            (List<Integer>, List<String>...)    ex: List<Integer>)
+        Lecture (get())	    ✅ Possible	                      ✅ Possible
+        Ajout (add())	    🚫 Impossible (sauf null)	       ✅ Possible (ajout d'éléments du type T)
+        Utilisation de T	❌ Pas de T, seulement Object	  ✅ Utilisation directe de T
+    -----------------------------------------------------------------------------------------------------
+     Quand utiliser quoi ?
+        ------------------------------------------------------------------------------------
+            Cas d'usage	                                     Quelle version choisir ?
+        ------------------------------------------------------------------------------------
+            Lecture seule, sans modifier la liste	        List<?> (car plus flexible)
+            Lecture + Ajout d’éléments du même type	        List<T> (car permet les ajouts)
+            Méthode acceptant plusieurs types (Integer,	    List<?>
+            String, etc.)
+        ------------------------------------------------------------------------------------
+    📌 Exemple pratique :
+        List<?> : Idéal pour une méthode d'affichage qui ne doit pas modifier la liste.
+        List<T> : Idéal pour une méthode qui manipule les éléments (ajout, suppression, transformation...).
+
+
+
+    - Avantages de la généricité :
+        Sécurité du type: La généricité permet de s'assurer que les données manipulées sont du bon type au 
+                            moment de la compilation, ce qui évite les erreurs de type à l'exécution.
+        Réutilisabilité du code: La généricité permet de créer des classes et des méthodes qui peuvent être 
+                            utilisées avec différents types de données, ce qui réduit la quantité de code à écrire et à maintenir.
+        Lisibilité du code: La généricité rend le code plus lisible en indiquant clairement le type de données
+                            manipulées.
+
+
+
+DATE ET DURÉES --------------------------------------------------------------------------------
+
+    1️⃣ LocalDate – Manipulation de la date uniquement
+        Utilisé quand seule la date est importante (sans heure).
+
+        Ex :
+            import java.time.LocalDate;
+            public class Main {
+                public static void main(String[] args) {
+                    // Date actuelle
+                    LocalDate today = LocalDate.now();
+                    System.out.println("Aujourd'hui : " + today);               // 2025-02-05 (Année - Mois - Jour)
+
+                    // Date spécifique (année, mois, jour)
+                    LocalDate date = LocalDate.of(2025, 2, 5);      
+                    System.out.println("Date spécifique : " + date);            // 2025-02-05
+
+                    // Ajouter/Soustraire des jours/mois/années
+                    LocalDate futureDate = today.plusDays(10);
+                    LocalDate pastDate = today.minusMonths(2);
+                    System.out.println("Dans 10 jours : " + futureDate);        // 2025-02-15
+                    System.out.println("Il y a 2 mois : " + pastDate);          // 2024-12-05
+
+                    // Comparaison de dates
+                    boolean isBefore = date.isBefore(today);
+                    boolean isAfter = date.isAfter(today);
+                    System.out.println("Est avant aujourd'hui ? " + isBefore);  // false
+                    System.out.println("Est après aujourd'hui ? " + isAfter);   // false
+                }
+            }
+
+            instanciation :
+                ~ LocalDate.EPOCH() : créer une date "1970-01-01"
+                ~ LocalDate.now() : créer une date d'aujourd'hui
+                ~ LocalDate.of(1988, 03, 14) : créer une date spécifique (année - mois - jour)
+            methodes :
+                ~ myDate.getYear() : récupérer l'année
+                ~ myDate.getMonthValue() : récupérer le mois numérique (ex: 03)
+                ~ myDate.getMonth() : récupérer le mois literal (ex: MARCH)
+                ~ myDate.getDayOfMonth() : récupérer le mois numérique (ex: 22)
+                ~ myDate.getDayOfWeek() : récupérer le mois literal (ex: Saturday)
+                ~ myDate.plusYears(4) / plusMonths(15) / plusDays(35) : ajout d'année/mois/jours
+                ~ myDate.minusYears(4) / minusMonths(15) / minusDays(35) : soustraction d'année/mois/jours
+                ~ myDate.plus(Period)
+
+
+
+    2️⃣ LocalTime – Manipulation de l'heure uniquement
+        Utilisé quand seule l’heure est importante (sans date).
+
+        Ex :
+            import java.time.LocalTime;
+            public class Main {
+                public static void main(String[] args) {
+                    // Heure actuelle
+                    LocalTime now = LocalTime.now();
+                    System.out.println("Heure actuelle : " + now);              // 14:45:10.123
+
+                    // Heure spécifique (heures, minutes, secondes)
+                    LocalTime time = LocalTime.of(14, 30, 15);
+                    System.out.println("Heure spécifique : " + time);           // 14:30:15
+
+                    // Ajouter/Soustraire des heures/minutes/secondes
+                    LocalTime futureTime = now.plusHours(3);
+                    LocalTime pastTime = now.minusMinutes(20);
+                    System.out.println("Dans 3 heures : " + futureTime);        // 17:45:10.123
+                    System.out.println("Il y a 20 minutes : " + pastTime);      // 14:25:10.123
+
+                    // Comparaison d'heures
+                    boolean isBefore = time.isBefore(now);
+                    boolean isAfter = time.isAfter(now);
+                    System.out.println("Est avant maintenant ? " + isBefore);   // true
+                    System.out.println("Est après maintenant ? " + isAfter);    // false
+                }
+            }
+
+            instanciation :
+                ~ LocalTime.now() : créer un temps d'aujourd'hui
+                ~ LocalTime.of(19, 03, 14) : créer un temps spécifique (heure - minute - sec)
+            methodes :
+                ~ myTime.getHour() : récupérer l'heure
+                ~ myTime.getMinute() : récupérer le minute
+                ~ myTime.plusHours(4) / plusMinutes(15) / plusSecondes(35) : ajout 
+                ~ myTime.minusHours(4) / minusMinutes(15) / minusSecondes(35) : soustraction 
+                ~ myTime.plus(Duration) : ajout d'une durée 
+
+
+    3️⃣ LocalDateTime – Combinaison de date et heure
+        Utilisé quand date + heure sont importantes ensemble.
+
+        Ex :
+            import java.time.LocalDateTime;
+            public class Main {
+                public static void main(String[] args) {
+                    // Date et heure actuelles
+                    LocalDateTime now = LocalDateTime.now();
+                    System.out.println("Date et heure actuelles : " + now);                 // 2025-02-05T14:45:10.123
+
+                    // Date et heure spécifiques
+                    LocalDateTime dateTime = LocalDateTime.of(2025, 2, 5, 14, 30, 15);
+                    System.out.println("Date et heure spécifiques : " + dateTime);          // 2025-02-05T14:30:15
+
+                    // Ajouter/Soustraire du temps
+                    LocalDateTime futureDateTime = now.plusDays(5).plusHours(2);
+                    LocalDateTime pastDateTime = now.minusMonths(1).minusMinutes(30);
+                    System.out.println("Dans 5 jours et 2 heures : " + futureDateTime);     // 2025-02-10T16:45:10.123
+                    System.out.println("Il y a 1 mois et 30 minutes : " + pastDateTime);    // 2025-01-05T14:15:10.123
+                }
+            }
+
+            instanciation :
+                ~ LocalDateTime.now() 
+                ~ LocalDateTime.of(someDate, someTime) : créer un temps spécifique (Annee - Mois - Jour - heure - minute - sec)
+            methodes : tout les methodes de LocalDate et LocalTime
+
+    5️⃣ Durées et Périodes (Duration et Period)
+        Period → Durée (jours, mois, années)
+
+            Ex :
+                import java.time.LocalDate;
+                import java.time.Period;
+                public class Main {
+                    public static void main(String[] args) {
+                        LocalDate startDate = LocalDate.of(2024, 1, 1);
+                        LocalDate endDate = LocalDate.of(2025, 2, 5);
+
+                        Period period = Period.between(startDate, endDate);
+
+                        System.out.println("Différence : " + period.getYears() + " ans, " + 
+                            period.getMonths() + " mois, " + period.getDays() + " jours");
+                    }
+                }
+
+            methodes :
+                ~ Period.of(03, 04, 06) : créer un Durée de 3ans, 4mois et 6j
+                ~ Period.between(startDate, endDate) : créer une durée entre startDate et endDate
+
+
+        Duration → Durée (heures, minutes, secondes)
+
+            Ex :
+                import java.time.Duration;
+                import java.time.LocalTime;
+                public class Main {
+                    public static void main(String[] args) {
+                        LocalTime startTime = LocalTime.of(10, 30);
+                        LocalTime endTime = LocalTime.of(14, 45);
+
+                        Duration duration = Duration.between(startTime, endTime);
+
+                        System.out.println("Durée : " + duration.toHours() + " heures, " + 
+                            duration.toMinutes() % 60 + " minutes");
+                    }
+                }
+
+            methodes :
+                ~ Duration.ofHours(3).plusMinutes(30) : créer une durée de 03h30    // affiche PT03H30
+                ~ Duration.between(startTime, endTime) : créer une durée entre startTime et endTime
+
+
+    6️⃣ Timezones avec ZoneId et ZonedDateTime
+
+        📌 ZoneId – Représente un fuseau horaire
+            ZoneId permet de définir un fuseau horaire spécifique (ex : "Europe/Paris", "GMT+3").
+
+                import java.time.ZoneId;
+                public class Main {
+                    public static void main(String[] args) {
+                        // Afficher le fuseau horaire par défaut
+                        ZoneId defaultZone = ZoneId.systemDefault();
+                        System.out.println("Fuseau par défaut : " + defaultZone);
+
+                        // Définir un fuseau horaire spécifique
+                        ZoneId parisZone = ZoneId.of("Europe/Paris");
+                        System.out.println("Fuseau horaire de Paris : " + parisZone);
+                    }
+                }
+
+        📌 ZonedDateTime – Manipuler une date/heure avec un fuseau horaire
+            ZonedDateTime associe une date, une heure et un fuseau horaire.
+
+                import java.time.ZonedDateTime;
+                import java.time.ZoneId;
+                public class Main {
+                    public static void main(String[] args) {
+                        // Date et heure actuelles avec fuseau par défaut
+                        ZonedDateTime now = ZonedDateTime.now();
+                        System.out.println("Date et heure actuelles : " + now);                 // 2025-02-06T14:45:10.123+01:00[Europe/Paris]
+
+                        // Date et heure actuelles avec un fuseau horaire spécifique
+                        ZonedDateTime parisTime = ZonedDateTime.now(ZoneId.of("Europe/Paris"));
+                        System.out.println("Heure de Paris : " + parisTime);                    // 2025-02-06T14:45:10.123+01:00[Europe/Paris]
+
+                        // Convertir une LocalDateTime en ZonedDateTime
+                        ZonedDateTime newYorkTime = parisTime.withZoneSameInstant(ZoneId.of("America/New_York"));
+                        System.out.println("Heure de New York : " + newYorkTime);               // 2025-02-06T08:45:10.123-05:00[America/New_York]
+                    }
+                }
+
+
+    7️⃣ Formatage des Dates (DateTimeFormatter)
+                import java.time.LocalDateTime;
+                import java.time.format.DateTimeFormatter;
+                public class Main {
+                    public static void main(String[] args) {
+                        LocalDateTime now = LocalDateTime.now();
+
+                        // Définir un format personnalisé
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+                        // Formater la date
+                        String formattedDate = now.format(formatter);
+                        System.out.println("Date formatée : " + formattedDate);
+                    }
+                }
+
+            -------------------------------------------------------
+                Motif	Exemple	    Description
+            -------------------------------------------------------
+                yyyy	2025	    Année sur 4 chiffres
+                yy	    25	        Année sur 2 chiffres
+                MM	    02	        Mois sur 2 chiffres
+                MMM	    Fév	        Mois abrégé
+                MMMM	Février	    Mois en toutes lettres
+                dd	    06	        Jour sur 2 chiffres
+                HH	    14	        Heure (24h)
+                hh	    02	        Heure (12h)
+                mm	    45	        Minutes
+                ss	    10	        Secondes
+            -------------------------------------------------------
+
+
+
+THREADS ---------------------------------------------------------------------------------------------------
+
+    Java prend en charge le multithreading, permettant d'exécuter plusieurs tâches en parallèle pour 
+    améliorer les performances des applications.
+
+    Un thread est un sous-processus léger qui peut s'exécuter indépendamment. Par défaut, un programme 
+    Java s'exécute sur un thread principal appelé main thread.
+        import java.lang.Thread; 
+        System.out.println("Thread principal : " + Thread.currentThread().getName());           // main
+
+    Il existe trois façons principales de créer un thread :
+
+        1️⃣ En étendant Thread : On crée une classe qui hérite de Thread et on redéfinit la méthode run().
+            (Ne pas appeler run() directement, sinon il s’exécutera comme une méthode normale)
+
+            class MonThread extends Thread {
+                public void run() {
+                    System.out.println("Exécution du thread : " + Thread.currentThread().getName());
+                }
+            }
+
+            MonThread thread1 = new MonThread();
+            thread1.start();  // Démarrer le thread > Thread-0
+            
+
+        2️⃣ En implémentant Runnable (Best Practice ✅)
+            class MonRunnable implements Runnable {
+                public void run() {
+                    System.out.println("Thread en cours d'exécution : " + Thread.currentThread().getName());
+                }
+            }
+
+            Thread thread2 = new Thread(new MonRunnable());
+            thread2.start();
+
+            ~ Thread.sleep(1000) => faire un pause de 1000ms
+            ~ Thread.sleep() => 
+
+
+        3️⃣ Les "Executors" pour être plus moderne      // java.util.concurrent
+            - newSingleThreadExecutor(): la possibilité d'avoir un thread
+            - newCachedThreadPool(): la possibilité d'avoir un thread dynamique
+            - newFixedThreadPool(): la possibilité d'avoir un nombre fixe de thread (pour les traitement plus lent)
+
+
+            ~ ExecutorService ex = Executors.newSingleThreadExecutor();
+            ~ ExecutorService ex = Executors.newCachedThreadPool();
+            ~ ExecutorService ex = Executors.newFixedThreadPool(4);             // 4 = nbr de threads 
+
+                Runnable task = () -> {                 // expression lambda
+                    ...
+                }
+
+                ex.execute(task);                       // executer task dans le "newSingleThreadExecutor"
+                ex.shutdown();                          // Ferme l'executor après exécution
+
+            avec ExecutorService on peut:
+                * fermer l'executor après exécution avec shutdown()
+                * avoir les resultats d'execution avec les "Future" (java.util.concurrent)
+                    Future<?> fut = executor.submit(task)       // <?> : générique (on ne sait pas quel type il récupère)
+                    ~ fut.isDone() => est fini (boolean)
+                    ~ fut.isCanceled() => est annulé (boolean)
+                    ~ fut.get() => recupére les resultats
+                    ~ fut.cancel() => annuler
+
+
+DASE DE DONNEES ---------------------------------------------------------------------------------------------------
+
+    JDBC est l'API standard de Java pour interagir avec une base de données relationnelle (comme MySQL, 
+    PostgreSQL, Oracle, etc.). Elle permet aux applications Java d’exécuter des requêtes SQL et de manipuler 
+    les données.
+
+    Pour interagir avec une base de données via JDBC, il faut suivre ces 5 étapes :
+        - Charger le Driver JDBC : mettre un pilote dans le classpath pour permettre à Java de communiquer 
+                                    avec une base de données
+        - Établir une Connexion : On utilise DriverManager pour établir une connexion avec la base de données
+        - Exécuter des Requêtes SQL : On utilise Statement pour exécuter des requêtes SQL.
+        - Utiliser PreparedStatement : pour plus de Sécurisé ✅
+        - Fermer la Connexion 
 
 
 
@@ -685,6 +1226,13 @@ NB : Général
     * les erreurs dans le console s'appelle les "Piles d'erreurs" (ce sont des informations d'erreurs qui s'empilent) 
 
     * il faut toujours mettre dans le bloc try-catch les methodes qui peuvent déclencher une exception
+
+    * L'époque Java : un point de référence universel
+        C'est définie comme le 1er janvier 1970 à 00h00 UTC (Temps Universel Coordonné). C'est un point de référence 
+        temporel standard à partir duquel sont calculées toutes les autres dates et heures en Java.
+
+    * (important) Les classes dans un package ne peuvent pas directement accéder aux classes du package par défaut (classe n'a pas de package).
+
 
 
 CONTEXT MENU DES EXTENSIONS JAVA VSCODE ---------------------------------------------------------------------------

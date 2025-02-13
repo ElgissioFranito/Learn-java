@@ -1,4 +1,11 @@
 package services;
+
+import enums.Color;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,14 +13,20 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
-import java.util.Stack;
+import java.util.Stack;        // Obsolete Collection
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import mypackages.Person;
 import mypackages.Player;
-import mypackages.Software;        // Obsolete Collection
+import mypackages.Software;
+import testthreads.MyRunnable;
+import testthreads.MyThread;
 
 class App {
 
+    // quand on étend "Thread" il faut redéfinir la methode run()
     public static void main(String[] args) throws Exception {
         int a = 1_333_088;
         System.out.println("Bonjour tout \nle \tmonde ! :)");
@@ -105,12 +118,12 @@ class App {
 
         System.out.println("-----------------------");
         System.out.println("String");
-        
-        String str1 = "Hello";                      
+
+        String str1 = "Hello";
         String str2 = new String("world");          // Warning : String str1 = "Hello" est plus optimisé
-        
+
         System.out.println(str1.concat(" ").concat(str2));
-        
+
         String str3 = "See/you/soon";
         System.out.println(str3.replaceAll("/", " "));
 
@@ -120,7 +133,7 @@ class App {
         }
         System.out.println("-----------------------");
         System.out.println("String Builder");
-        
+
         StringBuilder sb = new StringBuilder();
         sb.append("Bonjour ");
         sb.append("ici c'est le StringBuilder");
@@ -130,31 +143,27 @@ class App {
         // System.out.println("BufferReader");
         // InputStreamReader isr = new InputStreamReader(System.in);
         // BufferedReader br = new BufferedReader(isr);
-        
         // System.out.print("Quel est votre nom ? ");
         // String name = br.readLine();
         // System.out.println("Bonjour " + name);
         // System.out.println("-----------------------");
-        
         // System.out.println("Scanner");
         // Scanner sc = new Scanner(System.in);                    // Convert to try-with-resources
-        
         // System.out.print("Quel est votre age ? ");
         // int age = sc.nextInt();
         // System.out.println("Vous avez " + age + " ans ");
         // sc.close();
-        
         System.out.println("-----------------------");
         System.out.println("Les List : ArrayList & Vector");
-        
+
         ArrayList<Player> list = new ArrayList<>(10);
         list.add(player1);
         list.add(player2);
-        
+
         for (Player element : list) {
             System.out.println("le nom du player est dans list[" + list.indexOf(element) + "] : " + element.getName());
         }
-        
+
         System.out.println("count == length == size : " + list.size());
 
         // trier la "list"
@@ -172,44 +181,42 @@ class App {
             System.out.println(element);
         }
 
-        
         System.out.println("-----------------------");
         System.out.println("Les List : LinkedList");
-        
+
         LinkedList<Software> linkedList = new LinkedList<>();
         linkedList.add(software1);
         linkedList.addFirst(software2);
         linkedList.addLast(software3);
-        
+
         System.out.println("myFirst element by getFirst() : " + linkedList.getFirst());
 
         // for (Software element : linkedList) {
         //     System.out.println("le licence du logiciel est dans linkedList[" + list.indexOf(element) + "] : " + element.getLicence());
         // }
-        
-        ListIterator<Software> iter = linkedList.listIterator();         
+        ListIterator<Software> iter = linkedList.listIterator();
         while (iter.hasNext()) {
             Software element = iter.next();
             System.out.println("le licence du logiciel est : " + element.getLicence());
         }
-        
+
         System.out.println("-----------------------");
         System.out.println("Les List : Stack");
-        
+
         Stack<Player> stack = new Stack<>();
         stack.push(player1);
         stack.push(player2);
         stack.push(player3);
-        
+
         System.out.println("myLast element by peek() : " + stack.peek().getName());
         stack.pop();
-                
-        ListIterator<Player> iterStack = stack.listIterator();         
+
+        ListIterator<Player> iterStack = stack.listIterator();
         while (iterStack.hasNext()) {
             Player element = iterStack.next();
             System.out.println("l' element est : " + element.getName());
-        } 
-        
+        }
+
         System.out.println("-----------------------");
         System.out.println("Les File : ArrayDeque");
 
@@ -222,18 +229,115 @@ class App {
         Iterator<Player> iteraDeq = deque.iterator();
 
         while (iteraDeq.hasNext()) {
-            System.out.println(iteraDeq.next().getName() );
+            System.out.println(iteraDeq.next().getName());
+        }
+
+        System.out.println("-----------------------");
+        System.out.println("Les Enums");
+
+        Color rouge = Color.RED;
+        System.out.println(rouge);       // LUNDI
+
+        // System.out.println("-----------------------");
+        // System.out.println("Les Threads : ");
+
+        // MyThread thread1 = new MyThread();
+        // Thread thread2 = new Thread(new MyRunnable());
+
+        // thread1.start();
+        // thread2.start();
+
+        // System.out.println("-----------------------");
+        // System.out.println("Les Executor : newSingleThreadExecutor ");
+        
+        // ExecutorService ex = Executors.newSingleThreadExecutor();
+        
+        // Runnable task3 = () -> {                     // expression lambda
+        //     for (int i = 0; i < 3; i++) {
+        //         System.out.println(i + " - Exécuté par le thread : " + Thread.currentThread().getName());
+        //         try {
+        //             Thread.sleep(500);
+        //         } catch (InterruptedException e) {
+        //         }
+        //     }
+        // };
+
+        // Runnable task4 = () -> {                     // expression lambda
+        //     for (int i = 3; i < 6; i++) {
+        //         System.out.println(i + " - Exécuté par le thread : " + Thread.currentThread().getName());
+        //         try {
+        //             Thread.sleep(500);
+        //         } catch (InterruptedException e) {
+        //         }
+        //     }
+        // };
+        
+        // ex.execute(task3);      // executer avant
+        // ex.execute(task4);      // executer après (parce que c'est un seul thread)
+        // ex.shutdown();
+        
+        // System.out.println("Les Executor : newCachedThreadPool ");
+        
+        // ExecutorService exCached = Executors.newCachedThreadPool();
+        
+        // exCached.execute(task3);      // executer en meme temps
+        // exCached.execute(task4);      // executer en meme temps (parce que c'est multiple thread)
+        // exCached.shutdown();
+
+        // System.out.println("Les Executor : newFixedThreadPool ");
+        
+        // ExecutorService exFixed = Executors.newFixedThreadPool(4);
+
+        // Future<?> fut2 = exFixed.submit(task4);
+        
+        // while(!fut2.isDone()) {             // tant que le traitement "fut2" n'est pas fini
+        //     System.out.println("waiting...");
+        //     try {
+        //         Thread.sleep(1000);
+        //     } catch (InterruptedException e) {
+        //     }
+        // }
+        
+        // if (fut2.isDone()) {
+        //     System.out.println("Future 2 est términé!!!");
+        // }
+        
+        // Future<String> fut1 = exFixed.submit(task3,"Je suis la Future1 qui est termine!!!!!!!!!!!!!!!");
+        
+        // if (fut1.isDone()) {
+        //     try {
+        //         System.out.println(fut1.get());
+        //     } catch (Exception e) {
+        //     }
+        // }
+
+        // exFixed.shutdown();
+        
+
+
+        System.out.println("-----------------------");
+        System.out.println("Les JDBC : sqlite ");
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:products.db");
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM products");
+            while (rs.next()) {
+                System.out.println(rs.getInt("product_id") + " " + rs.getString("product_name"));
+            }
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
 
 
     }
 
-
     // -------------------------------------------------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------
-
-
-
     public static String getName() {
         return "David";
     }

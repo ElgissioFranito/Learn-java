@@ -1,4 +1,4 @@
-ERROR 1 : package "namepackage.blabla" does not exist
+ERROR 1 : package "namepackage.blabla" does not exist (===> FAKE)
 
     - il faut toujours assurer que les packages soient compiler en bytecode (.class)
         ex : javac namepackage/*.java

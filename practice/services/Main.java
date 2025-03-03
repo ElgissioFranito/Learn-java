@@ -13,16 +13,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
-import java.util.Stack;        // Obsolete Collection
-import java.util.Vector;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.Stack;
+import java.util.Vector;        // Obsolete Collection
 import mypackages.Person;
 import mypackages.Player;
 import mypackages.Software;
-import testthreads.MyRunnable;
-import testthreads.MyThread;
 
 class App {
 
@@ -317,24 +312,87 @@ class App {
 
         System.out.println("-----------------------");
         System.out.println("Les JDBC : sqlite ");
-
+        System.out.println("-----------------------");
+        
+        // Connection conn = null;
         try {
-            Class.forName("org.sqlite.JDBC");
-            Connection conn = DriverManager.getConnection("jdbc:sqlite:products.db");
+            // Charger le driver JDBC pour SQLite
+            // Class.forName("org.sqlite.JDBC");
+            
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\Elgissio\\Desktop\\Learn-java\\practice\\services\\products.db");     
+            
+            System.out.println("Connexion réussie !");
+
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM products");
             while (rs.next()) {
-                System.out.println(rs.getInt("product_id") + " " + rs.getString("product_name"));
+                System.out.println(rs.getInt("product_id") + " - " + rs.getString("product_name"));
             }
-            rs.close();
-            stmt.close();
+            System.out.println("-----------------------");
+            
+            String req = "DELETE FROM products WHERE product_id = 9";
+            stmt.executeUpdate(req);
+            
+            ResultSet rs2 = stmt.executeQuery("SELECT * FROM products");
+            while (rs2.next()) {
+                System.out.println(rs2.getInt("product_id") + " - " + rs2.getString("product_name"));
+            }
+            
+            // rs.close();
+            // stmt.close();
             conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        } finally {
+            // extracted(conn);
+            System.out.println("Connexion fermée !");
+        }
+
+
+        System.out.println("-----------------------");
+        System.out.println("Les JDBC : MySQL ");
+        System.out.println("-----------------------");
+        
+        // Connection conn = null;
+        try {
+            // Charger le driver JDBC pour MySQL
+            // Class.forName("com.mysql.cj.jdbc.Driver");
+            
+            Connection conn2 = DriverManager.getConnection("jdbc:mysql://localhost:3301/gestion_stock_db?useSSL=false", "root", "");    
+            
+            System.out.println("Connexion réussie !");
+
+            Statement stmt2 = conn2.createStatement();
+            ResultSet rs2 = stmt2.executeQuery("SELECT * FROM users");
+            while (rs2.next()) {
+                System.out.println(rs2.getInt("id_user") + " - " + rs2.getString("nom_user"));
+            }
+            System.out.println("-----------------------");
+            
+            String req = "DELETE FROM users WHERE id_user = 9";
+            stmt2.executeUpdate(req);
+            
+            ResultSet rs3 = stmt2.executeQuery("SELECT * FROM users");
+            while (rs3.next()) {
+                System.out.println(rs3.getInt("id_user") + " - " + rs3.getString("nom_user"));
+            }
+            
+            // rs.close();
+            // stmt2.close();
+            conn2.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            // extracted(conn);
+            System.out.println("Connexion fermée !");
         }
 
 
     }
+
+    // private static void extracted(Connection conn) throws SQLException {
+    //     conn.close();
+    // }
 
     // -------------------------------------------------------------------------------------------------------------------
     // -------------------------------------------------------------------------------------------------------------------

@@ -52,6 +52,27 @@ Les conditions on peut l'écrire sans les accolades sur une seule ligne
     else
         System.out.println("value ne vaut ni 24 ni 16 ni 14");
         
+Le "switch" peut etre écris comme ceci :
+	public static String categorieDeFilm(final String film) {
+	    var resultat = switch(film) {									// le resultat de switch vont directement dans "resultat"
+	        case "Star Wars" -> "Science fiction";
+	        case "Blanche neige", "La petite sirène" -> "Disney";
+	        case "Indiana Jones" -> {									// bloc en plusieurs lignes
+	            String categorie = "Aventure";
+	            yield categorie;										// yield => "categorie" est retourné par le switch mais pas par la fonction
+	        }															// uniquement depuis Java 14
+	        default -> "Inconnu";
+	    };
+	    return resultat;
+	}
+        
+Le structures itératives = boucle
+	public static void main(String[] args) {
+	    List<String> languageNames = Arrays.asList("Java", "PHP", "JavaScript");
+	    for (String language : languageNames) {
+	        System.out.println(language);
+	    }
+	}
 
 CLASSE ------------------------------------------------------------------------------------------------------
 
@@ -62,9 +83,9 @@ NB :
         on ne me pas de porté
     * On peut déclarer des méthodes de même nom si ils n'on pas les 
         même signatures (arguments, type d'arguments, type de retour)
-        Ça s'appelle le "Surcharge de méthode"
+        Ça s'appelle le "Surcharge de méthode"				// polymorphisme à la compilation
 
-    * le "constructor" porte le nom du classe   
+    * le "constructeur" porte le nom du classe et n’a pas de type retour   
         public class Person {
             public Person() {                           // Constructor
                 System.out.println("Person created");
@@ -79,7 +100,7 @@ NB :
             return "Hello " + name + " ! You have " + NbSister +" sisters";
         }
         (Sinon on peut simuler avec le surcharge de methodes en créant plusieurs 
-        methode de même nom)
+        methode de même nom)								// polymorphisme à la compilation
 
 
 Accesseurs : (encapsulation de données)
@@ -208,6 +229,9 @@ Import du package :
                     Knife weapon1 = new Knife();
                 }
             }
+            
+ 	NB : - il faut mettre "public" devant un classe ou un methode (surtout le constructeur) pour qu'un
+ 			autre fichier java dans un autre package peut l'utiliser (ex: Main.java)
 
     
 LECTURE AU CLAVIER ------------------------------------------------------------------------------------------------------
@@ -270,8 +294,28 @@ EXCEPTION ----------------------------------------------------------------------
     finaly {
         System.out.println("cet text s'affiche s'il y a une exception ou pas");
     }
-
-
+    
+    NB: - L’exception NullPointerException est couramment nommée NPE par les développeurs Java.
+		- NPE se prosuit quand on exécute une méthode sur une variable qui vaut null.
+		- Ce type de message s’appelle en anglais “stack trace”, cela donne la trace entre l’endroit où l’erreur a eu lieu 
+			et le point d’entrée du programme :	
+				Exception in thread "main" java.lang.NullPointerException: Cannot invoke "java.util.Set.size()" because 
+				the return value of "ej.Kit.getMotsCles()" is null
+				at firstproject.Main.main(Main.java:8)
+		- Le mot-clé "throw" sans "s" suivi de l’instanciation d'une sorte d'Exception permet de lever l’exception.
+				 throw new IllegalArgumentException();
+		- Java nous contraint à ajouter à la signature de la méthode l’information : throws Exception		// avec s
+				Bloc(final int hauteur) throws IllegalBlocException {
+				    if(hauteur < MIN_HAUTEUR) {
+				        throw new IllegalBlocException();
+				    }
+		- si c'est sur un constructeur, tous les constructeurs des classes filles doivent également 
+			ajouter throws IllegalBlocException à leur signature.
+		- De plus, le code de la classe Main sera obligé :
+				* soit de mettre un try catch autour de l’appel du constructeur.
+				* soit de mettre un throws IllegalBlocException à la méthode main pour qu’elle redirige à son tour cette exception.
+		- RuntimeException et ses classes filles ont le droit à un traitement particulier en ce sens que nous 
+			n'avons pas besoin de spécifier dans la signature de la méthode (comme RuntimeException et IllegalArgumentException)
 
 HERITAGE ------------------------------------------------------------------------------------------------------
 
@@ -283,10 +327,17 @@ NB :
     - la super.move() veut dire utiliser le methode "move()" de la classe parent
     - les enfants peut utiliser les methodes de la classe supérieur
     - en java, une classe ne peut pas hérité de plusieurs parents (héritage multiple )
+    - Une instance d’une classe fille peut être affectée à une variable typée par la classe mère   
+    	Horse unChaval = new Pegasus();   						// l'inverse n'est pas possible
+    															// unChaval ne peut pas utiliser la methode spécifique de Pegassus car c'est typé Horse
+    - Même si la variable qui contient l’instance d’une classe fille est typée par la classe mère, 
+    	lorsqu’une méthode est redéfinie, c’est le code de la classe fille qui est exécuté.			// polymorphisme à l’exécution
+    - on y ajoute l’annotation @Overidde juste avant la signature pour informer qu’une méthode est redéfinie.
     - mot clé "final" :
         * final nomClass = ce classe n'est pas extendable 
-        * final nomMethode = ce methode n'est pas redefiniss able dans les classe enfants  
+        * final nomMethode = ce methode n'est pas redefinissable dans les classe enfants  
         * final nomVariable = ce classe n'est pas modifiable (constant)
+     
 
     ex : Horse.java
         package jc.entities;
@@ -335,7 +386,7 @@ CLASSE ABSTRAITE ---------------------------------------------------------------
             sauf si la sous-classe elle-même est déclarée abstraite.
         * peut étendre d'une autre classe abstraite
 
-CLASSE ABSTRAITE -------------------------------------------------------------------------------------------
+METHODE ABSTRAITE -------------------------------------------------------------------------------------------
 
     - Une méthode abstraite est une méthode qui n’a pas de corps (pas de code dans les accolades). 
     - Elle est uniquement définie pour être implémentée par des sous-classes.
@@ -354,12 +405,16 @@ INTERFACE ----------------------------------------------------------------------
         sont toutes abstraites.
 
     - NB :
+    	* elle peut avoir des variables qui sont automatiquement public, static et final, on dit que ce sont des constantes.
         * on n'a pas besoin de spécifié "public" et "abstract" car toutes est publique et abstrait par défaut,
             mais on peut aussi le faire.
         * on fait "interface" au lieu de "class"
         * peut étendre d'une autre interface (extends)
         * on emploie le mot clé "implements" si une classe veut implémenter une interface (Rq : les extends d'abord)
         * une classe peut implémenter plusieurs interface (implémentation multiple)
+        * On ne peut pas forcer une classe abstraite de redefinir une methode de l'interface même s'il
+        	l'implemente, par contre les classes fille doit redéfinir la methode. 
+        * Une variable peut être typée par une interface.
     
     ex : Volant.java
     interface Volant {
@@ -1180,15 +1235,136 @@ DASE DE DONNEES ----------------------------------------------------------------
     PostgreSQL, Oracle, etc.). Elle permet aux applications Java d’exécuter des requêtes SQL et de manipuler 
     les données.
 
+
     Pour interagir avec une base de données via JDBC, il faut suivre ces 5 étapes :
         - Charger le Driver JDBC : mettre un pilote dans le classpath pour permettre à Java de communiquer 
-                                    avec une base de données
-        - Établir une Connexion : On utilise DriverManager pour établir une connexion avec la base de données
-        - Exécuter des Requêtes SQL : On utilise Statement pour exécuter des requêtes SQL.
-        - Utiliser PreparedStatement : pour plus de Sécurisé ✅
+                                    avec une base de données (en général .jar )
+            et mettre :
+                Class.forName("org.sqlite.JDBC")        // si c'est une base SQLite
+        - Établir une Connexion : On utilise "DriverManager" pour établir une connexion avec la base de données (dans java.sql)
+            Connection co = DriverMananager.getConnection()
+            * SQLite => getConnection("jdbc:sqlite:path\\to\\db.sql");
+            * MySQL => getConnection("jdbc:mysql://localhost:3306/dbname?useSSL=false", "user", "pass");
+        - Exécuter des Requêtes SQL : On utilise "Statement" pour exécuter des requêtes SQL et "ResultSet" 
+        pour stoquer les resultats de la requête.
+            => Statement stmt = conn.createStatement();
+            => ResultSet rs = stmt.executeQuery("SELECT * FROM products");
+            s'il n'y a pas de resultat à recuperer (DELETE, UPDATE,...)
+            => stmt.executeUpdate(...)      
+        - Utiliser PreparedStatement : pour plus de Sécurisé (par ex, s'il y de données des utilisateur ou exterieur à entrer) ✅
+            PreparedStatement stmt = conn.prepareStatement("UPDATE products SET product_name = ? WHERE product_id = ?");    // ? = Joker
+            stmt.setString(1, "Jores");             // 1 = 1er joker
+            stmt.setInt(2, 23);                     // 2 = 2e joker
+            stmt.executeUpdate();                   // s'il n'y a pas de resulatat a recuperer sinon on fait un ResultSet avec executeQuery()
         - Fermer la Connexion 
 
+NB : 
+     - SQLite est un base de données portable, embarquée directement dans le projet sans connection à distant
+     - Il faut Configurer le classpath:
+        Ouvrez le fichier ".vscode/settings.json" de votre projet et ajoutez le chemin vers le fichier JAR. 
+        Inserer cet code de configuration :
+        {
+            "java.project.referencedLibraries": [
+                "lib/**/*.jar",
+                ou
+                "path/to/your/sqlite-jdbc-version.jar"
+            ]
+        }
+     - certains drivers JDBC peuvent se charger automatiquement et s'enregistrer sans avoir besoin de 
+        l'appeler explicitement dans Class.forName()
+     - faire un "while (rs.next())" pour boucler sur tout les resultats trouver sur la réquête ("SELECT * FROM products")
+        sinon il va faire les actions (par exemple : getString()) sur le prémier resultat trouver (comme first)
 
+
+        ~ rs.getString("product_name) => Récuperer le champ "product_name" de la table "products" (getInt, getDouble,...)
+        ~ 
+
+
+
+JURNALISATION (LOGGING) --------------------------------------------------------------------------------------------
+
+	La journalisation (logging) est une technique essentielle en Java pour enregistrer des messages sur l’état d’une 
+	application, détecter des erreurs, surveiller son exécution, et faciliter le débogage.
+	Au lieu d’utiliser System.out.println(), qui n’est pas flexible ni performant, Java propose des bibliothèques 
+	spécialisées comme :
+		* java.util.logging (JUL) (API intégrée à Java)
+		* Log4j (Apache Log4j)
+		* SLF4J (Simple Logging Facade for Java)
+		* Logback (recommandé avec Spring Boot)
+	
+	Pourquoi utiliser un Logger
+		✅ Différents niveaux de log (INFO, DEBUG, ERROR, etc.)
+		✅ Possibilité de rediriger les logs vers des fichiers, la console, une base de données, etc.
+		✅ Améliore la maintenabilité et le débogage
+	
+	Le concept consiste en l’association d’une trace avec un niveau. Ensuite lors de l’exécution de l’application le niveau 
+	de log à utiliser est défini. Toutes les traces associées à ce niveau et au niveau supérieur sont utilisées.
+		
+	Voici un exemple de niveaux de log :
+		Le niveau OFF sera donc celui à appliquer pour les utilisateurs finaux où nous ne voulons voir aucune trace.
+		Le niveau ALL est son extrême opposé, il est le plus verbeux et affiche la moindre trace disponible ! 
+
+		---------------------------------
+		Nom du niveau	Valeur du niveau
+		---------------------------------
+		OFF				0
+		FATAL			100
+		ERROR			200
+		WARN			300
+		INFO			400
+		DEBUG			500
+		TRACE			600
+		ALL				Integer.MAX_VALUE
+		---------------------------------
+
+	NB : - En fonction de la bibliothèque de Logging les niveaux peuvent varier.
+		 - Un fichier JAR est une archive contenant plusieurs fichiers java compilés
+	
+	Installation la bibliothèque Log4J en v2 (log for J)
+		1 - la bibliothèque Log4J doit être téléchargée ici : 
+			https://logging.apache.org/log4j/2.x/download.html > la version binary.zip
+		2 - ajouter les fichiers jar au projet:
+			extraire le fichier zip télécharger
+			dans Eclipse clic droit sur le projectname > Build Path > Configure Build Path
+			dans le fenetre qui s'ouvre > Librairies > Modulepath > Add External JARs
+			allez dans le fichier télécharger (déjà extrait) > apache-log4j-version-bin
+			selectionner log4j-api-version.jar et log4j-core-version.jar
+			Apply and Close
+			Verifier les librairies dans Package Explorer > Projectname > Raferenced Librairies
+			
+	Utilisation de la bibliothèque Log4J
+		1 - Créer le fichier projectname/src/log4j2.properties
+			rootLogger = ERROR, STDOUT·							// les logs de la racine sont associé a niveau ERROR
+			
+			loggers = ej.bloc									// créer un autre log associé au package projetctname.bloc
+			logger.ej.bloc.name = ej.bloc						// affecter un nom au logger projetctname.bloc
+			logger.ej.bloc.level = INFO							// affecter un nineau au logger projetctname.bloc
+			
+			appender.console.name = STDOUT						// créer un apppender dans la console
+			appender.console.type = Console
+			appender.console.layout.type = PatternLayout
+			appender.console.layout.pattern = [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n		// model de l'affichage
+
+		2 - ajouter des traces
+			créer un variable privée dans la classe de type org.apache.logging.log4j.Logger :
+				private static Logger logger = LogManager.getLogger(Bloc.class);
+			utiliser dans la classe même
+				logger.info("ma trace…");						// selon le niveau accepter dans la fichier "log4j2.properties"
+		
+DEVOIR : voir la documentation (https://logging.apache.org/log4j/2.x/manual/appenders.html) de log4j2 
+		car si je crée "projectname/src/log4j2.properties" ça marche pas mais si je ne le crée pas, 
+		le log s'affiche normalement dans la console
+		
+	Voici quelques bonnes pratiques :
+		Chaque classe doit avoir sa propre instance de Logger.
+		Les traces doivent être datées.
+		Les niveaux de logs doivent être définis en fonction des packages.
+		Les traces ne doivent pas polluer l’utilisateur final. 
+		La configuration du logging doit être externalisée dans un fichier pour pouvoir la modifier à 
+			chaud sans avoir à redémarrer l’application.
+		Aucune information sensible (comme un mot de passe) ne doit être dans les traces.
+	
+	
 
 -------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------
@@ -1207,8 +1383,18 @@ NB : Général
         Sans elle, Java ne serait pas aussi universel et polyvalent. C'est elle qui traduit le bytecode (.class)
         indépendant en instructions spécifiques à votre machine, tout en gérant des aspects complexes 
         comme la mémoire et la sécurité.
-
-    * Tou les objets java (Array, String, objet d'une classe,...) hérite du classe "Object"
+	* Java est un langage compilé, langage typé, langage objet.
+        
+	* En Java, le nom d’une classe doit toujours commencer par une majuscule. Le nom du fichier Java 
+		doit correspondre au nom de la classe.
+	
+    * Tout les type primitive java non initialisé ont des valeurs par défaut (int = 0, char = "", ...)
+    * Tout les objets java  non initialisé (Array, String, objet d'une classe,...) ont des valeurs par défaut = null
+    * on ne fait pas d'import  si :
+    	- on utilise des classe dans le même paquage
+    	- on utilise des classe dans le paquage java.lang
+        
+    * Tout les objets java (Array, String, objet d'une classe,...) hérite du classe "Object"
         et peuvent utiliser ses méthodes comme : equals, toString 
 
     * Monothread : utilise 1 seul thread ou fil d’exécution           // StringBuilder 
@@ -1220,6 +1406,22 @@ NB : Général
     Comprendre cette différence est crucial pour concevoir des applications performantes et réactives.
     * NB : souvent on utilise le monothreading pour une question de performance. 
 
+	* les 05 signatures d'une foction sont :
+		- visibilité : Cet élément influence les zones de code qui seront en droit d’exécuter la fonction.
+		- caractéristique : Le comportement d’une fonction peut être altéré par cet élément. Plusieurs mots-clés 
+							Java sont applicables ici comme final ou static.
+		- type retour : Comme le langage Java est typé il faut définir à l’avance quel type de donnée sera renvoyé.
+		- nom : Le nom sera utilisé pour exécuter la fonction au moment voulu.
+		- paramètres : Une fonction peut recevoir des données en entrée. Ces données seront alors exploitées 
+						durant le traitement.
+						
+	* Java ne permet pas de mettre de valeur par défaut aux paramètres des méthodes. 
+		Le mécanisme de surcharge permet de résoudre ce point comme le montre l’exemple précédent.
+	
+	* Les techniques de programmation (variable, fonction, condition, itération) appartiennent au paradigme de la
+		programmation structurée . Ce paradigme est une base pour de nombreux langages de programmation qui est 
+		différent du langage objet.
+		
     * si on veut déplacer un fichier ou modifier des choses (comme le nom du package, les import,...) dans java, 
         il faut supprimer le bytecode(.class) et le recompiler 
 
@@ -1232,6 +1434,9 @@ NB : Général
         temporel standard à partir duquel sont calculées toutes les autres dates et heures en Java.
 
     * (important) Les classes dans un package ne peuvent pas directement accéder aux classes du package par défaut (classe n'a pas de package).
+    
+    * Vérifier qu'un comportement qui était fonctionnel l’est toujours après une modification s’appelle un test de non-régression.
+    * Une trace ou un log en anglais est une information issue de l’exécution du code de l’application. 
 
 
 

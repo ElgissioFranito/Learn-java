@@ -31,26 +31,29 @@ OpenClassrooms Java ROADMAP:
     2 - Écrivez du code Java maintenable avec MVC et SOLID
         URL : https://openclassrooms.com/fr/courses/6810956-ecrivez-du-code-java-maintenable-avec-mvc-et-solid
 
-    2 - Testez votre code Java pour réaliser des applications de qualité
+    3 - Testez votre code Java pour réaliser des applications de qualité
         URL : https://openclassrooms.com/fr/courses/6100311-testez-votre-code-java-pour-realiser-des-applications-de-qualite
 
-    3 - Développez des sites web avec Java EE
+    4 - Développez des sites web avec Java EE
         URL : https://openclassrooms.com/fr/courses/2434016-developpez-des-sites-web-avec-java-ee
     
-    4 - Organisez et packagez une application Java avec Apache Maven 
+    5 - Organisez et packagez une application Java avec Apache Maven 
         URL : https://openclassrooms.com/fr/courses/4503526-organisez-et-packagez-une-application-java-avec-apache-maven
 
-    5 - Créez une application Java avec Spring Boot
+    6 - Créez une application Java avec Spring Boot
         URL : https://openclassrooms.com/fr/courses/6900101-creez-une-application-java-avec-spring-boot
 
-    5 - Sécurisez vos applications web avec l'OWASP
+    7 - Sécurisez vos applications web avec l'OWASP
         URL : https://openclassrooms.com/fr/courses/6179306-securisez-vos-applications-web-avec-lowasp
 
-    5 - Sécurisez votre application web avec Spring Security
+    8 - Sécurisez votre application web avec Spring Security
         URL : https://openclassrooms.com/fr/courses/7137776-securisez-votre-application-web-avec-spring-security
 
-    5 - Automatisez des tests fonctionnels pour le web avec Cypress (angular)
+    * - Automatisez des tests fonctionnels pour le web avec Cypress (angular)
         URL : https://openclassrooms.com/fr/courses/8157231-automatisez-des-tests-fonctionnels-pour-le-web-avec-cypress
+
+    * - Appliquez le principe du Domain-Driven Design à votre application
+        URL : https://openclassrooms.com/fr/courses/5647281-appliquez-le-principe-du-domain-driven-design-a-votre-application
 
     
     

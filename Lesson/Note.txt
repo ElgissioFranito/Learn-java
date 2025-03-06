@@ -79,8 +79,8 @@ CLASSE -------------------------------------------------------------------------
 NB : 
     * On ne peut pas créer un projet java sans une Classe
     * 1 classe = 1 fichier
-    * Les propriétés d'une classe est "public" par défaut si 
-        on ne me pas de porté
+    * Les propriétés d'une classe est "private" par défaut si on ne me pas de porté
+    * les methodes d'une classes est "private" par défaut si on ne met pas de porté
     * On peut déclarer des méthodes de même nom si ils n'on pas les 
         même signatures (arguments, type d'arguments, type de retour)
         Ça s'appelle le "Surcharge de méthode"				// polymorphisme à la compilation
@@ -436,9 +436,111 @@ INTERFACE ----------------------------------------------------------------------
             System.out.println("L'avion vole.");
         }
     }
+    
+    NB: - Les interfaces fonctionnelles ont la particularité de définir une seule méthode abstraite  
+			@FunctionnalInterface
+			public interface IAffichage {
+			    void afficher(String texte);
+			}
+
+
+EXPRESSION LAMBDA ---------------------------------------------------------------------------------------------
+
+	Une expression lambda est une fonction anonyme car elle n’a pas besoin d’être définie dans le cadre 
+	d’une classe. Grâce à cela, cette fonction est considérée comme une valeur qu’on peut affecter à une 
+	variable ou passé en paramètre d’une autre fonction.
+	Syntaxe:
+		(paramètres) -> { corps de la fonction }
+		✔️ Les paramètres sont passés entre ().
+		✔️ La flèche -> sépare les paramètres et le corps de la fonction.
+		✔️ Si le corps contient une seule instruction, {} sont optionnels.
+		
+	NB : 
+		- un interface fonctionnelle est le type associé à une expression lambda
+		
+		- Il existe de nombreuses interfaces fonctionnelles (ou fonction anonyme) dans le langage Java, par exemple :
+			Predicate : la méthode prend un paramètre générique de type T et renvoie un booléen.
+			Function : la méthode prend un paramètre générique de type T et renvoie une valeur générique de type R.
+			Consumer : la méthode prend un paramètre générique de type T et ne renvoie rien.
+			Runnable : la méthode ne prend pas de paramètre et ne renvoie rien.
+			
+			// Callable : la méthode ne prend pas de paramètre et renvoie une valeur générique de type R
+		
+		ex : 
+			Consumer<String> fn = (mot) -> System.out.print(mot);	// on peut affecter à une variable (ici c'est pas utile mais pour l'exemple)
+			motCles.foreach(fn);									// foreach d'un objet Collection prend en paramètre un fonction "Consummer"
+
+            --------------------------------------------------------------------------------------------------------------------------------
+            Interface	    Rôle	                                            Méthode principale              Exemple d’utilisation
+            --------------------------------------------------------------------------------------------------------------------------------
+            Predicate<T>	Teste une condition et retourne true/false	        boolean test(T t)	            Filtrage d’une liste                    // fn.test("Jean")      => return true
+            Function<T, R>	Transforme un objet T en R	                        R apply(T t)	                Convertir un mot en longueur            // fn.apply("Jean")     => return "Jeannette"
+            Consumer<T>	    Effectue une action sur T sans retour	            void accept(T t)	            Afficher un message                     // fn.accept("Jean")    => return void
+            Runnable	    Exécute une tâche sans paramètre ni retour	        void run()	                    Thread                                  // fn.run()             => return void
+            --------------------------------------------------------------------------------------------------------------------------------
+
+        exemples : Predicate<T>
+            Predicate<Integer> estPair = n -> n % 2 == 0;
+            System.out.println(estPair.test(4)); // true
+            System.out.println(estPair.test(7)); // false
+            List<Integer> nombres = Arrays.asList(1, 2, 3, 4, 5, 6);
+            List<Integer> pairs = nombres.stream().filter(estPair).collect(Collectors.toList());
+            System.out.println(pairs); // [2, 4, 6]
+
+        exemples : Function<T,R>
+            Function<String, Integer> longueurMot = mot -> mot.length();
+            System.out.println(longueurMot.apply("Java"));   // 4
+            System.out.println(longueurMot.apply("Lambda")); // 6
+
+        exemples : Consumer<T>
+            Consumer<String> afficher = nom -> System.out.println("Bonjour " + nom);
+            afficher.accept("Alice"); // Bonjour Alice
+            List<String> noms = Arrays.asList("Bob", "Charlie", "David");
+            noms.forEach(afficher);
+
+        exemples : Runnable
+            Runnable tache = () -> System.out.println("Tâche exécutée !");
+            Thread thread = new Thread(tache);
+            thread.start();
+
+LES RÉFÉRENCES À DES MÉTHODES (Method reference) --------------------------------------------------------------
+
+    permettent de remplacer une expression lambda lorsqu'elle appelle directement une méthode existante. 
+    Elles rendent le code plus lisible et concis.
+
+    Une référence à une méthode utilise :: (double deux-points) et suit l'une des formes suivantes :
+        ClassName::staticMethod      // Référence à une méthode statique
+        objet::instanceMethod        // Référence à une méthode d'instance sur un objet existant
+        ClassName::instanceMethod    // Référence à une méthode d'instance sur un objet arbitraire
+        ClassName::new               // Référence à un constructeur
+
+    Exemples : Remplace une lambda qui appelle une méthode statique
+        Function<String, Integer> lambda1 = s -> Integer.parseInt(s);       // Lambda classique
+        Function<String, Integer> refMethode = Integer::parseInt;           // Avec une référence de méthode
+
+        System.out.println(refMethode.apply("123"));                        // 123
+
+    Exemples : Utilisé lorsque la méthode appartient à une instance spécifique
+        String message = "Bonjour";
+        Supplier<Integer> lambda2 = () -> message.length();                 // Lambda classique
+        Supplier<Integer> refMethode = message::length;                     // Avec une référence de méthode
+
+        System.out.println(refMethode.get());                               // 7
+
+    Exemples : Utilisé lorsqu’on travaille sur une collection d'objets
+        List<String> noms = Arrays.asList("Alice", "Bob", "Charlie");
+        noms.forEach(nom -> System.out.println(nom));                       // Lambda classique
+        noms.forEach(System.out::println);                                  // Avec une référence de méthode
+
+    Exemples : Utilisé pour créer un objet avec new
+        Supplier<Voiture> lambda4 = () -> new Voiture();                    // Lambda classique
+        Supplier<Voiture> refConstructeur = Voiture::new;                   // Avec une référence de constructeur
+
+        refConstructeur.get();                                              // "Nouvelle voiture créée !"
 
 
 POLYMORPHISME ---------------------------------------------------------------------------------------------
+
 
 
 COLLECTION ---------------------------------------------------------------------------------------------
@@ -457,6 +559,7 @@ Les classes qui implements l'interface collection auront ces methodes :
     * toArray() : transformer en Array classique
     * ... (voir la documentation)
     - Collections.sort(collections) => trie les elements de la collection (import java.util.Collections)
+    - Collections.swap(collections, index, index) => échanger les positions de deux éléments dans une collection
 
 
 Les classes qui implements l'interface collection :
@@ -776,7 +879,7 @@ ENUMERATION (ENUM) -------------------------------------------------------------
 
             private int code; // Attribut
 
-            Statut(int code) { // Constructeur
+            Statut(int code) { // Constructeur, on met le parametre meme si on l'appelle pas
                 this.code = code;
             }
 
@@ -796,7 +899,7 @@ ENUMERATION (ENUM) -------------------------------------------------------------
 
             private int code;
 
-            Statut(int code) {
+            Statut(int code) {		// on met le parametre meme si on l'appelle pas
                 this.code = code;
             }
 
@@ -841,8 +944,17 @@ ENUMERATION (ENUM) -------------------------------------------------------------
     
 
 NB : 
-    - on ne peut pas étendre d'une Classe ni étendre une Enum (parce que c'est une classe final)
+    - on ne peut pas étendre d'une Classe ni étendre une Enum (parce que c'est une classe final par défaut)
+    - tout les attributs sont privé par défaut si on ne met pas de porté (la liste des valeurs d'une enum ne sont pas des attribus)
     - on ne peut pas créer un instance d'un Enum (parce que le constructeur est privé)
+    - pour créer une enum associé des valeurs, on doit lui fournir un constructeur.
+    - comme pour tous les classes, les methodes et les attributs est "private" par défaut si on ne met pas "public" 
+      dans sa signature. (mais la propriété reste privé même si on lui met "public")
+    - on peut mettre un enum dans une classe
+	    public class GameController {
+			enum GameState {
+				AddPlayer, CardDealt, WinnerRevealed
+			}
 
 
 
@@ -1199,10 +1311,9 @@ THREADS ------------------------------------------------------------------------
             thread2.start();
 
             ~ Thread.sleep(1000) => faire un pause de 1000ms
-            ~ Thread.sleep() => 
 
 
-        3️⃣ Les "Executors" pour être plus moderne      // java.util.concurrent
+        3️⃣ Les "Executors" pour être plus moderne (Écrivez un code concurrent)	// java.util.concurrent
             - newSingleThreadExecutor(): la possibilité d'avoir un thread
             - newCachedThreadPool(): la possibilité d'avoir un thread dynamique
             - newFixedThreadPool(): la possibilité d'avoir un nombre fixe de thread (pour les traitement plus lent)
@@ -1212,7 +1323,8 @@ THREADS ------------------------------------------------------------------------
             ~ ExecutorService ex = Executors.newCachedThreadPool();
             ~ ExecutorService ex = Executors.newFixedThreadPool(4);             // 4 = nbr de threads 
 
-                Runnable task = () -> {                 // expression lambda
+				// Callable : un methode qui ne prend pas de paramètre mais return un T	(java.util.concurrent.Callable)
+                Runnable task = () -> {                 // expression lambda, Runneble ne renvoie rien	
                     ...
                 }
 
@@ -1221,12 +1333,51 @@ THREADS ------------------------------------------------------------------------
 
             avec ExecutorService on peut:
                 * fermer l'executor après exécution avec shutdown()
-                * avoir les resultats d'execution avec les "Future" (java.util.concurrent)
+                * avoir les resultats d'execution dans un variable de Type "Future" (java.util.concurrent)
                     Future<?> fut = executor.submit(task)       // <?> : générique (on ne sait pas quel type il récupère)
                     ~ fut.isDone() => est fini (boolean)
                     ~ fut.isCanceled() => est annulé (boolean)
                     ~ fut.get() => recupére les resultats
                     ~ fut.cancel() => annuler
+                    
+            Exemple concret: Construction de 10 blocs
+        
+			    Set<IBloc> blocs = new LinkedHashSet<IBloc>();
+			    ExecutorService executorService = Executors.newFixedThreadPool(10);
+			    
+			    Callable<IBloc> taskMur1 = () -> { return new Mur(3, 2, 2, true); };
+			    Callable<IBloc> taskMur2 = () -> { return new Mur(2, 1, 2, false); };
+			    Callable<IBloc> taskPorte = () -> { return new Porte(1, 2, 2, true); };
+			    Callable<IBloc> taskToit = () -> { return new Toit(3, 1, 1); };
+			    
+			    List<Callable<IBloc>> tasks = Arrays.asList(taskMur1, taskMur1, taskMur2, taskMur2, taskPorte, 
+			    											taskToit, taskToit, taskToit, taskToit, taskToit);
+			    try {
+			        List<Future<IBloc>> resultas = executorService.invokeAll(tasks);
+			        resultas.forEach((resultat) -> {
+			        try {
+			            blocs.add(resultat.get());
+			        } catch (InterruptedException | ExecutionException e) {
+			            logger.error("Erreur lors de création parallèle des blocs.");
+			        }
+			        });
+			    } catch (InterruptedException e) {
+			        logger.error("Erreur lors de création parallèle des blocs.");
+			    }
+			    executorService.shutdown();
+			    
+			    // si une crétion prend 1s : au lieu d’environ 10 secondes, le code met environ 1 seconde à s’exécuter
+			    
+		NB: Depuis la version 19 de Java, pour affronter les problèmes de concurrence, les Virtual Thread sont à votre disposition.
+			(celle en dessus, on va l'appeler Platform Thread)
+			(il faut juste cahnger newFixedThreadPool() par newVirtualThreadPerTaskExecutor() et on import dans l'exemple précédent)
+			
+			----------------------------------------------------------------------------------------------
+								Gestionnaire du Thread			Conséquence
+			----------------------------------------------------------------------------------------------
+			Platform Thread		Système d’exploitation			Sollicite directement l’OS donc plus lourd
+			Virtual Thread		JVM								Ne sollicite pas l’OS et donc plus léger.		// rapide à l'ecriture
+			----------------------------------------------------------------------------------------------
 
 
 DASE DE DONNEES ---------------------------------------------------------------------------------------------------
@@ -1370,6 +1521,31 @@ DEVOIR : voir la documentation (https://logging.apache.org/log4j/2.x/manual/appe
 -------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------
 
+Paradigme et paradigme de programmation ?
+	-Un paradigme est une façon de voir le monde et ses problèmes.
+	-Un paradigme en programmation est une manière d'écrire et visualiser le code. Il s'agit d'un style 
+	 de programmation qui définit la façon dont le programme est structuré et exécuté.
+	ex : la programmation orientée objet, la programmation impérative, la programmation déclarative,
+		 programmation fonctionnelle
+	- Un langage est spécialisé dans un paradigme mais il peut utiliser d'autre avec plus ou moins de 
+	 difficulté et un résultat plus ou moins efficace.
+	 
+	Programmation impérative : 
+		Description du "comment" : La programmation impérative se concentre sur la description précise 
+									des étapes à suivre pour atteindre un résultat. Le développeur spécifie 
+									comment le programme doit s'exécuter, en donnant des instructions détaillées.
+		Modification de l'état : Les programmes impératifs modifient l'état du programme en manipulant 
+									des variables et en exécutant des instructions séquentielles.
+		Exemples : C, Java, Python (dans une certaine mesure).
+
+	Programmation déclarative
+		Description du "quoi" : La programmation déclarative se concentre sur la description du résultat 
+								souhaité, sans préciser comment l'atteindre. Le développeur déclare ce qu'il 
+								veut obtenir, laissant le langage ou l'environnement d'exécution déterminer 
+								les étapes à suivre.
+		Abstraction des détails d'implémentation : Les programmes déclaratifs sont plus abstraits et se 
+								concentrent sur la logique de haut niveau plutôt que sur les détails d'implémentation.
+		Exemples : SQL, HTML, CSS, Prolog.
 
 NB : Général
     * La JVM fait partie du Java Runtime Environment (JRE). Pour exécuter un programme Java, 
@@ -1438,6 +1614,19 @@ NB : Général
     * Vérifier qu'un comportement qui était fonctionnel l’est toujours après une modification s’appelle un test de non-régression.
     * Une trace ou un log en anglais est une information issue de l’exécution du code de l’application. 
 
+
+
+
+QUELQUE METHODE UTILES ---------------------------------------------------------------------------
+
+        Random random = new Random();
+        int randomNumber1 = random.nextInt();		// Génère un nombre entier pseudo-aléatoire
+        int randomNumber2 = random.nextInt(10);		// Génère un nombre entier pseudo-aléatoire compris entre 0 (inclus) et 10 (exclus)
+        // c'est les même dans nextBoolean(), nextDouble(), nextLong(), nextFloat()
+        
+		byte[] byteArray = new byte[10];
+		random.nextBytes(byteArray);				// Génère un tableau de bytes aléatoires
+        
 
 
 CONTEXT MENU DES EXTENSIONS JAVA VSCODE ---------------------------------------------------------------------------

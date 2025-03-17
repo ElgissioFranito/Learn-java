@@ -26,7 +26,7 @@ OpenClassrooms Java ROADMAP:
         URL : https://openclassrooms.com/fr/courses/6173501-apprenez-a-programmer-en-java
 
       => (recent) Apprenez à programmer en Java 
-            URL : https://openclassrooms.com/fr/courses/8383791-apprenez-a-programmer-en-java
+            URL : https://openclassrooms.com/fr/courses/8383791-apprenez-a-programmer-en-java ===> OK
 
     2 - Écrivez du code Java maintenable avec MVC et SOLID
         URL : https://openclassrooms.com/fr/courses/6810956-ecrivez-du-code-java-maintenable-avec-mvc-et-solid
@@ -49,11 +49,56 @@ OpenClassrooms Java ROADMAP:
     8 - Sécurisez votre application web avec Spring Security
         URL : https://openclassrooms.com/fr/courses/7137776-securisez-votre-application-web-avec-spring-security
 
+    ANGULAR
     * - Automatisez des tests fonctionnels pour le web avec Cypress (angular)
         URL : https://openclassrooms.com/fr/courses/8157231-automatisez-des-tests-fonctionnels-pour-le-web-avec-cypress
 
+    DDD
     * - Appliquez le principe du Domain-Driven Design à votre application
         URL : https://openclassrooms.com/fr/courses/5647281-appliquez-le-principe-du-domain-driven-design-a-votre-application
+
+    DEVOPS
+    * - Découvrez la méthodologie DevOps (DevOps 1 - facile)
+        URL : https://openclassrooms.com/fr/courses/6093671-decouvrez-la-methodologie-devops#overview
+
+    * - Optimisez votre déploiement en créant des conteneurs avec Docker (DevOps 2 - moyenne)
+        URL : https://openclassrooms.com/fr/courses/8431896-optimisez-votre-deploiement-en-creant-des-conteneurs-avec-docker
+
+    * - Mettez en place l'intégration et la livraison continues avec la démarche DevOps (DevOps 3 - difficile) // CI-CD
+        URL : https://openclassrooms.com/fr/courses/2035736-mettez-en-place-lintegration-et-la-livraison-continues-avec-la-demarche-devops
+
+    * - Orchestrez vos conteneurs avec Kubernetes (DevOps 4 - très difficile)
+        URL : https://openclassrooms.com/fr/courses/8395236-orchestrez-vos-conteneurs-avec-kubernetes
+
+    * - Utilisez Ansible pour automatiser vos tâches de configuration
+        URL : https://openclassrooms.com/fr/courses/2035796-utilisez-ansible-pour-automatiser-vos-taches-de-configuration
+
+    SOFT SKILL
+    * - Gérez votre temps efficacement
+        URL : https://openclassrooms.com/fr/courses/5944991-gerez-votre-temps-efficacement
+
+    * - Télétravaillez efficacement
+        URL : https://openclassrooms.com/fr/courses/7080836-teletravaillez-efficacement
+
+    BUSINESS
+    * - Lancez votre activité de freelance
+        URL : https://openclassrooms.com/fr/courses/4137661-lancez-votre-activite-de-freelance
+
+    * - Choisissez le statut juridique adapté à votre activité
+        URL : https://openclassrooms.com/fr/courses/5177201-choisissez-le-statut-juridique-adapte-a-votre-activite
+    
+    * - Réussissez vos rendez-vous commerciaux
+        URL : https://openclassrooms.com/fr/courses/6391716-reussissez-vos-rendez-vous-commerciaux
+    
+    * - Construisez un business plan
+        URL : https://openclassrooms.com/fr/courses/5191546-construisez-un-business-plan?archived-source=3199026
+
+    RAHA TEHANOKATRA VAROTRA
+    * - Découvrez le métier de Vendeur (1)
+        URL : https://openclassrooms.com/fr/courses/8481576-decouvrez-le-metier-de-vendeur
+
+    * - Construisez votre rapport d’activité commerciale (2)
+        URL : https://openclassrooms.com/fr/courses/8486036-construisez-votre-rapport-d-activite-commerciale
 
     
     

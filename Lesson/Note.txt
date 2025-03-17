@@ -169,6 +169,8 @@ STRING : immuable (Contenue non-modifiable) => le système détruit l'ancien adr
         String chaine1= "Hello"
         String chaine2= new String("world")
 
+NB : les caractères misent dans un simple guillemet sont de type "char" non pas String
+
     * methode utiles : 
         - concat()
         - length() => la longueur du String

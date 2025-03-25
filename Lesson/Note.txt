@@ -297,6 +297,23 @@ EXCEPTION ----------------------------------------------------------------------
         System.out.println("cet text s'affiche s'il y a une exception ou pas");
     }
     
+    ou try-with-resources :				// La ressource dans les parenthèses doit implémenter l'interface AutoCloseable (ou Closeable)
+    
+	try (BufferedReader br = new BufferedReader(new FileReader("file.txt"))) {
+	    String line = br.readLine();
+	    System.out.println(line);		// Pas besoin d'écrire br.close() 
+	} catch (IOException e) {
+	    e.printStackTrace();
+	}
+	-------------------------------------------------------------------------------------------------
+     	Syntaxe						Fonctionnement					Utilité principale
+	-------------------------------------------------------------------------------------------------
+	 	try { ... } catch {}		Capture et gère les exceptions	Gestion d'erreurs standard
+	-------------------------------------------------------------------------------------------------
+		try (resource) { ... } 		Gestion automatique des 		Fermeture automatique des 
+		  catch {}					 ressources + exceptions			 ressources (I/O, DB, etc.)
+	-------------------------------------------------------------------------------------------------
+	
     NB: - L’exception NullPointerException est couramment nommée NPE par les développeurs Java.
 		- NPE se prosuit quand on exécute une méthode sur une variable qui vaut null.
 		- Ce type de message s’appelle en anglais “stack trace”, cela donne la trace entre l’endroit où l’erreur a eu lieu 
@@ -403,13 +420,12 @@ INTERFACE ----------------------------------------------------------------------
 
     - Une interface en Java est un "contrat". Ce "contrat" stipule que toute classe qui implémente une 
         interface doit fournir des implémentations pour toutes les méthodes déclarées dans cette interface.
-    - en terme d'explication, c'est comme si une interface c'est une classe abstraite dont toute les methodes
-        sont toutes abstraites.
+    - en terme d'explication, une interface c'est une classe abstraite dont toute les methodes
+        sont toutes abstraites et des constantes (public static final)
 
     - NB :
-    	* elle peut avoir des variables qui sont automatiquement public, static et final, on dit que ce sont des constantes.
-        * on n'a pas besoin de spécifié "public" et "abstract" car toutes est publique et abstrait par défaut,
-            mais on peut aussi le faire.
+    	* elle peut avoir des variables qui sont automatiquement "public static final", on dit que ce sont des constantes.
+        * on n'a pas besoin de spécifié "public" et "abstract" sur les methodes car toutes est publc abstract par défaut
         * on fait "interface" au lieu de "class"
         * peut étendre d'une autre interface (extends)
         * on emploie le mot clé "implements" si une classe veut implémenter une interface (Rq : les extends d'abord)
@@ -1410,6 +1426,13 @@ DASE DE DONNEES ----------------------------------------------------------------
             stmt.setInt(2, 23);                     // 2 = 2e joker
             stmt.executeUpdate();                   // s'il n'y a pas de resulatat a recuperer sinon on fait un ResultSet avec executeQuery()
         - Fermer la Connexion 
+        
+	Ajouter les fichiers jar au projet:
+		- dans Eclipse clic droit sur le projectname > Build Path > Configure Build Path
+		- dans le fenetre qui s'ouvre > Librairies > Modulepath > Add External JARs
+		- selectionner jdbc_name.jar
+		- Apply and Close
+		- Verifier les librairies dans Package Explorer > Projectname > Raferenced Librairies
 
 NB : 
      - SQLite est un base de données portable, embarquée directement dans le projet sans connection à distant
@@ -1433,6 +1456,19 @@ NB :
         ~ 
 
 
+
+RECORD ------------------------------------------------------------------------------------------------------------
+	Les records en Java sont une fonctionnalité introduite dans Java 14 (en preview) et officiellement stabilisée 
+	dans Java 16.
+	
+	Qu'est-ce qu'un record ?
+		- Un record est une manière concise de définir une classe qui ne sert qu'à stocker des données (comme un 
+		  DTO en Spring Boot ou un simple modèle d'entité).
+		- Au lieu d'écrire une classe avec des attributs, un constructeur, des getters, equals(), hashCode() et 
+		  toString(), un record génère tout ça automatiquement !
+
+	
+	
 
 JURNALISATION (LOGGING) --------------------------------------------------------------------------------------------
 
@@ -1615,8 +1651,16 @@ NB : Général
     
     * Vérifier qu'un comportement qui était fonctionnel l’est toujours après une modification s’appelle un test de non-régression.
     * Une trace ou un log en anglais est une information issue de l’exécution du code de l’application. 
-
-
+    
+    * Un boilerplate en Java (et en programmation en général) désigne du code standard, répétitif et souvent nécessaire pour faire 
+      fonctionner une application, mais qui n’apporte pas directement de valeur métier.
+      Exemples de Boilerplate en Java : Getters et Setters sans implementation spécifique, 
+      		Constructeur qui fait que des affectations, toString(), equals(), hashCode()
+      Réduction du Boilerplate en Java : Lombok (@Data, @Getter, @Setter, @Builder, @AllArgsConstructor, @EqualsAndHashCode, etc.)
+			télécharger "lombok.jar" et installe le dans l'eclipse avec la commande : java -jar lombok.jar
+			Vérifie si Lombok est bien installé dans Eclipse :
+				-Va dans Help → About Eclipse → Installation Details.
+				-Dans l’onglet Installed Software, cherche Lombok.
 
 
 QUELQUE METHODE UTILES ---------------------------------------------------------------------------

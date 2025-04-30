@@ -495,6 +495,7 @@ EXPRESSION LAMBDA --------------------------------------------------------------
             Function<T, R>	Transforme un objet T en R	                        R apply(T t)	                Convertir un mot en longueur            // fn.apply("Jean")     => return "Jeannette"
             Consumer<T>	    Effectue une action sur T sans retour	            void accept(T t)	            Afficher un message                     // fn.accept("Jean")    => return void
             Runnable	    Exécute une tâche sans paramètre ni retour	        void run()	                    Thread                                  // fn.run()             => return void
+            Callable		Exécute une tâche sans paramètre avec retour		R run()	                    	Thread 
             --------------------------------------------------------------------------------------------------------------------------------
 
         exemples : Predicate<T>
@@ -1342,7 +1343,7 @@ THREADS ------------------------------------------------------------------------
             ~ ExecutorService ex = Executors.newFixedThreadPool(4);             // 4 = nbr de threads 
 
 				// Callable : un methode qui ne prend pas de paramètre mais return un T	(java.util.concurrent.Callable)
-                Runnable task = () -> {                 // expression lambda, Runneble ne renvoie rien	
+                Runnable task = () -> {                 // expression lambda, Runnable ne renvoie rien	
                     ...
                 }
 
@@ -1398,7 +1399,7 @@ THREADS ------------------------------------------------------------------------
 			----------------------------------------------------------------------------------------------
 
 
-DASE DE DONNEES ---------------------------------------------------------------------------------------------------
+BASE DE DONNEES ---------------------------------------------------------------------------------------------------
 
     JDBC est l'API standard de Java pour interagir avec une base de données relationnelle (comme MySQL, 
     PostgreSQL, Oracle, etc.). Elle permet aux applications Java d’exécuter des requêtes SQL et de manipuler 
@@ -1435,6 +1436,8 @@ DASE DE DONNEES ----------------------------------------------------------------
 		- Verifier les librairies dans Package Explorer > Projectname > Raferenced Librairies
 
 NB : 
+	 - STATEMENT est un objet qui a pour rôle de transferer des réquetes SQL dans la base de données et d'y
+	   récuperer des résultats.
      - SQLite est un base de données portable, embarquée directement dans le projet sans connection à distant
      - Il faut Configurer le classpath:
         Ouvrez le fichier ".vscode/settings.json" de votre projet et ajoutez le chemin vers le fichier JAR. 
